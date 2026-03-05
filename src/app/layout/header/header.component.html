@@ -1,0 +1,35 @@
+<header class="header">
+    <div class="container header-top">
+        <div class="logo">
+            <a routerLink="/">
+                <span class="brand">MyShop</span>
+            </a>
+        </div>
+
+        <nav class="nav">
+            <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
+                Trang chủ
+            </a>
+            <a routerLink="/products" routerLinkActive="active">
+                Sản phẩm
+            </a>
+            <a routerLink="/about" routerLinkActive="active">
+                Giới thiệu
+            </a>
+            <a routerLink="/contact" routerLinkActive="active">
+                Liên hệ
+            </a>
+        </nav>
+
+        <div class="header-right">
+            <a routerLink="/cart" class="cart-link">
+                🛒 Giỏ hàng
+            </a>
+
+            <div class="hotline">
+                <span class="label">Hotline</span>
+                <span class="phone">0909 123 456</span>
+            </div>
+        </div>
+    </div>
+</header>

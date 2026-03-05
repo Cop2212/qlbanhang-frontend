@@ -1,0 +1,74 @@
+<section class="cart-page">
+    <div class="container">
+
+        <h1 class="page-title">Giỏ hàng của bạn</h1>
+
+        <div *ngIf="cartItems.length > 0; else emptyCart">
+
+            <div class="cart-layout">
+
+                <!-- TABLE -->
+                <div class="cart-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Sản phẩm</th>
+                                <th>Giá</th>
+                                <th>Số lượng</th>
+                                <th>Tạm tính</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr *ngFor="let item of cartItems">
+                                <td>{{ item.name }}</td>
+                                <td>{{ item.price | number }} đ</td>
+
+                                <td>
+                                    <div class="quantity-control">
+                                        <button (click)="decrease(item)">-</button>
+                                        <span>{{ item.quantity }}</span>
+                                        <button (click)="increase(item)">+</button>
+                                    </div>
+                                </td>
+
+                                <td>{{ item.price * item.quantity | number }} đ</td>
+
+                                <td>
+                                    <button class="remove-btn" (click)="removeItem(item.id)">
+                                        ❌
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <button class="update-btn" (click)="updateCart()">
+                        Cập nhật giỏ hàng
+                    </button>
+
+                </div>
+
+                <!-- SUMMARY -->
+                <div class="cart-summary">
+                    <h3>Tổng cộng</h3>
+                    <p class="total">{{ total | number }} đ</p>
+                    <button class="btn-primary">Thanh toán</button>
+                </div>
+
+            </div>
+
+        </div>
+
+        <ng-template #emptyCart>
+            <div class="empty-cart">
+                <p>Giỏ hàng của bạn đang trống.</p>
+                <a routerLink="/products" class="btn-primary">
+                    Tiếp tục mua sắm
+                </a>
+            </div>
+        </ng-template>
+
+    </div>
+</section>

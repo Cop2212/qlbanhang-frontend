@@ -1,0 +1,87 @@
+<section class="product-detail">
+  <div class="container">
+
+    <!-- ===== PRODUCT INFO ===== -->
+    <div class="product-main">
+      
+      <div class="product-gallery">
+        <div class="main-image"></div>
+        <div class="thumbnail-list">
+          <div class="thumb"></div>
+          <div class="thumb"></div>
+          <div class="thumb"></div>
+        </div>
+      </div>
+
+      <div class="product-info">
+        <h1>Tên sản phẩm</h1>
+        <p class="price">1.200.000 đ</p>
+        <p class="short-desc">
+          Mô tả ngắn sản phẩm nổi bật, chất lượng cao, bảo hành chính hãng.
+        </p>
+
+        <div class="quantity">
+          <label>Số lượng:</label>
+          <input type="number" value="1" min="1">
+        </div>
+
+        <button class="btn-primary">Thêm vào giỏ hàng</button>
+      </div>
+
+    </div>
+
+    <!-- ===== TAB SECTION ===== -->
+    <div class="product-tabs">
+      <div class="tab-header">
+        <button 
+          [class.active]="activeTab === 'description'" 
+          (click)="activeTab = 'description'">
+          Mô tả
+        </button>
+
+        <button 
+          [class.active]="activeTab === 'reviews'" 
+          (click)="activeTab = 'reviews'">
+          Đánh giá
+        </button>
+      </div>
+
+      <div class="tab-content">
+
+        <div *ngIf="activeTab === 'description'">
+          <p>
+            Đây là phần mô tả chi tiết sản phẩm. Bao gồm thông số kỹ thuật,
+            chất liệu, nguồn gốc và các thông tin quan trọng khác.
+          </p>
+        </div>
+
+        <div *ngIf="activeTab === 'reviews'">
+          <div class="review">
+            <strong>Nguyễn Văn A</strong>
+            <p>Sản phẩm rất tốt, giao hàng nhanh!</p>
+          </div>
+
+          <div class="review">
+            <strong>Trần Thị B</strong>
+            <p>Đóng gói cẩn thận, sẽ ủng hộ lần sau.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===== SIMILAR PRODUCTS ===== -->
+    <div class="similar-products">
+      <h2>Sản phẩm tương tự</h2>
+
+      <div class="product-grid">
+        <div class="product-card" *ngFor="let item of similarProducts">
+          <div class="image-placeholder"></div>
+          <h4>{{ item.name }}</h4>
+          <p class="price">{{ item.price | number }} đ</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>

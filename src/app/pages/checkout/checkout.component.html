@@ -1,0 +1,111 @@
+<section class="checkout-page">
+  <div class="container">
+
+    <h1 class="page-title">Thanh toán</h1>
+
+    <div class="checkout-layout">
+
+      <!-- ===== THÔNG TIN THANH TOÁN ===== -->
+      <div class="billing">
+
+        <h2>Thông tin thanh toán</h2>
+
+        <form>
+
+          <div class="row">
+            <div class="form-group">
+              <label>Tên *</label>
+              <input type="text" required>
+            </div>
+
+            <div class="form-group">
+              <label>Họ *</label>
+              <input type="text" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Tên công ty (tùy chọn)</label>
+            <input type="text">
+          </div>
+
+          <div class="form-group">
+            <label>Quốc gia / Khu vực *</label>
+            <select>
+              <option>Việt Nam</option>
+              <option>USA</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Địa chỉ *</label>
+            <input type="text">
+          </div>
+
+          <div class="row">
+            <div class="form-group">
+              <label>Thị trấn / Thành phố *</label>
+              <input type="text">
+            </div>
+
+            <div class="form-group">
+              <label>Mã bưu điện (tùy chọn)</label>
+              <input type="text">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Số điện thoại *</label>
+            <input type="text">
+          </div>
+
+          <div class="form-group">
+            <label>Email *</label>
+            <input type="email">
+          </div>
+
+          <div class="form-group">
+            <label>Thông tin bổ sung</label>
+            <textarea rows="4" placeholder="Ghi chú về đơn hàng..."></textarea>
+          </div>
+
+        </form>
+
+      </div>
+
+      <!-- ===== MÔ TẢ ĐƠN HÀNG ===== -->
+      <div class="order-summary">
+
+        <h2>Đơn hàng của bạn</h2>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Sản phẩm</th>
+              <th>Tạm tính</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let item of orderItems">
+              <td>{{ item.name }} × {{ item.quantity }}</td>
+              <td>{{ item.price * item.quantity | number }} đ</td>
+            </tr>
+
+            <tr class="total-row">
+              <td><strong>Tổng cộng</strong></td>
+              <td><strong>{{ total | number }} đ</strong></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <button class="btn-primary full">
+          Đặt hàng
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+</section>

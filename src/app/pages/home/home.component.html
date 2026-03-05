@@ -1,0 +1,46 @@
+<!-- ===== BANNER ===== -->
+<section class="banner">
+  <div class="container banner-content">
+    <h1>Chào mừng đến với MyShop</h1>
+    <p>Sản phẩm chất lượng cao - Giá tốt nhất thị trường</p>
+    <button class="btn-primary">Xem sản phẩm</button>
+  </div>
+</section>
+
+<!-- ===== PRODUCT SECTION ===== -->
+<section class="products">
+  <div class="container">
+    <h2 class="section-title">Sản phẩm nổi bật</h2>
+
+    <div class="product-grid">
+      <div class="product-card" *ngFor="let item of products">
+        <div class="image-placeholder"></div>
+        <h3>{{ item.name }}</h3>
+        <p class="price">{{ item.price | number }} đ</p>
+        <button class="btn-secondary">Xem chi tiết</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CONSULTATION SECTION ===== -->
+<section class="consultation">
+  <div class="container">
+    <div class="consult-wrapper">
+      <div class="consult-left">
+        <h2>Đăng ký tư vấn miễn phí</h2>
+        <p>Để lại thông tin để chúng tôi hỗ trợ bạn nhanh nhất.</p>
+      </div>
+
+      <div class="consult-right">
+        <form>
+          <input type="text" placeholder="Họ và tên">
+          <input type="text" placeholder="Số điện thoại">
+          <input type="email" placeholder="Email">
+          <textarea rows="4" placeholder="Nội dung tư vấn"></textarea>
+          <button class="btn-primary">Gửi thông tin</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
