@@ -1,20 +1,31 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ProductService } from '../../services/product.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-products',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.scss']
 })
-export class ProductsComponent {
+export class ProductsComponent implements OnInit {
 
   categories = ['Điện thoại', 'Laptop', 'Phụ kiện'];
 
-  products = Array.from({ length: 9 }, (_, i) => ({
-    name: `Sản phẩm ${i + 1}`,
-    price: 500000 + i * 100000
-  }));
+  products: any[] = [];
+
+  constructor(private productService: ProductService) { }
+
+  ngOnInit(): void {
+    this.loadProducts();
+  }
+
+  loadProducts() {
+    this.productService.getProducts().subscribe((res: any) => {
+      this.products = res.data ?? res;
+    });
+  }
 
 }

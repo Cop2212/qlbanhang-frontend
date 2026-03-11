@@ -1,25 +1,79 @@
 <!-- ===== BANNER ===== -->
-<section class="banner">
-  <div class="container banner-content">
-    <h1>Chào mừng đến với MyShop</h1>
-    <p>Sản phẩm chất lượng cao - Giá tốt nhất thị trường</p>
-    <button class="btn-primary">Xem sản phẩm</button>
+<section class="hero">
+
+  <div class="hero-slider" [style.transform]="'translateX(-' + currentSlide * 100 + '%)'">
+
+    <div class="hero-slide" *ngFor="let slider of sliders">
+
+      <img [src]="slider.image" class="hero-bg">
+
+      <div class="hero-overlay"></div>
+
+      <div class="hero-content">
+        <div class="container hero-inner">
+
+          <h1>{{ slider.title }}</h1>
+
+          <div class="hero-buttons">
+            <a [routerLink]="slider.link" class="btn-primary">
+              Xem sản phẩm
+            </a>
+
+            <a routerLink="/lien-he" class="btn-outline">
+              Tư vấn ngay
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
   </div>
+
+  <!-- Nút điều hướng -->
+  <button class="nav prev" (click)="prevSlide()">❮</button>
+  <button class="nav next" (click)="nextSlide()">❯</button>
+
+  <!-- Dots -->
+  <div class="hero-dots">
+
+    <span *ngFor="let s of sliders; let i = index" [class.active]="i === currentSlide" (click)="goToSlide(i)">
+    </span>
+
+  </div>
+
 </section>
 
 <!-- ===== PRODUCT SECTION ===== -->
 <section class="products">
   <div class="container">
+
     <h2 class="section-title">Sản phẩm nổi bật</h2>
 
     <div class="product-grid">
+
       <div class="product-card" *ngFor="let item of products">
-        <div class="image-placeholder"></div>
+
+        <img [src]="item.thumbnail" alt="product">
+
         <h3>{{ item.name }}</h3>
-        <p class="price">{{ item.price | number }} đ</p>
-        <button class="btn-secondary">Xem chi tiết</button>
+
+        <p class="product-color" *ngIf="item.color">
+          Màu: {{ item.color }}
+        </p>
+
+        <p class="price">
+          {{ item.price | number }} đ
+        </p>
+
+        <a class="btn-secondary" [routerLink]="['/product', item.slug]">
+          Xem chi tiết
+        </a>
+
       </div>
+
     </div>
+
   </div>
 </section>
 

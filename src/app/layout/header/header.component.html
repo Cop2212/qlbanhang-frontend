@@ -1,35 +1,61 @@
 <header class="header">
     <div class="container header-top">
+
+        <!-- Logo -->
         <div class="logo">
             <a routerLink="/">
-                <span class="brand">MyShop</span>
+                <img *ngIf="setting?.logo" [src]="setting?.logo" alt="logo">
+                <span class="brand" *ngIf="!setting?.logo">
+                    {{ setting?.site_name }}
+                </span>
             </a>
         </div>
 
+        <!-- Menu -->
         <nav class="nav">
             <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
                 Trang chủ
             </a>
+
             <a routerLink="/products" routerLinkActive="active">
                 Sản phẩm
             </a>
+
             <a routerLink="/about" routerLinkActive="active">
                 Giới thiệu
             </a>
+
             <a routerLink="/contact" routerLinkActive="active">
                 Liên hệ
             </a>
         </nav>
 
+        <!-- Right -->
         <div class="header-right">
+
+            <!-- Cart -->
             <a routerLink="/cart" class="cart-link">
-                🛒 Giỏ hàng
+                <span class="cart-icon">🛒</span>
+                <span class="cart-text">Giỏ hàng</span>
+
+                <!-- badge -->
+                <span class="cart-count" *ngIf="cartCount > 0">
+                    {{ cartCount }}
+                </span>
             </a>
 
+            <!-- Hotline -->
             <div class="hotline">
-                <span class="label">Hotline</span>
-                <span class="phone">0909 123 456</span>
+                <span class="hotline-icon">📞</span>
+
+                <div class="hotline-info">
+                    <span class="label">Hotline</span>
+                    <span class="phone">{{ setting?.phone }}</span>
+                </div>
+
             </div>
+
         </div>
+
     </div>
 </header>
