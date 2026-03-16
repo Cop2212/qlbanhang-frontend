@@ -49,10 +49,16 @@
                 <span class="hotline-icon">📞</span>
 
                 <div class="hotline-info">
-                    <span class="label">Hotline</span>
-                    <span class="phone">{{ setting?.phone }}</span>
-                </div>
 
+                    <span class="label">Hotline</span>
+
+                    <a class="phone" [href]="phoneLink" target="_blank">
+
+                        {{ setting?.phone }}
+
+                    </a>
+
+                </div>
             </div>
 
         </div>

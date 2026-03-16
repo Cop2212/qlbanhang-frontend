@@ -1,0 +1,59 @@
+<div class="about-page">
+
+    <div class="container">
+
+        <!-- ===== LOGO ===== -->
+        <div class="about-logo">
+            <img *ngIf="setting?.logo" [src]="setting?.logo" alt="logo">
+        </div>
+
+
+        <!-- ===== GIỚI THIỆU CÔNG TY ===== -->
+        <section class="about-intro">
+
+            <h1 class="about-title">
+                {{ company?.title }}
+            </h1>
+
+            <div class="about-content" [innerHTML]="company?.content">
+            </div>
+
+        </section>
+
+
+        <!-- ===== THÔNG TIN DOANH NGHIỆP ===== -->
+        <section class="company-info-section">
+
+            <h2 class="section-title">
+                Thông tin doanh nghiệp
+            </h2>
+
+            <div class="company-card">
+
+                <div class="info-row">
+                    <span class="label">Tên công ty</span>
+                    <span class="value">{{ company?.name }}</span>
+                </div>
+
+                <div class="info-row">
+                    <span class="label">Mã số thuế</span>
+                    <span class="value">{{ company?.tax_code }}</span>
+                </div>
+
+                <div class="info-row">
+                    <span class="label">Người đại diện</span>
+                    <span class="value">{{ company?.representative }}</span>
+                </div>
+
+                <div class="info-row">
+                    <span class="label">Năm thành lập</span>
+                    <span class="value">{{ company?.established_year }}</span>
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</div>

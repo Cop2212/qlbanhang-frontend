@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Product } from '../models/product';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
 
-  private api = 'http://localhost:8000/api/products';
+  private api = environment.apiUrl + '/products';
 
   constructor(private http: HttpClient) { }
 
@@ -20,4 +21,7 @@ export class ProductService {
     return this.http.get<any>(`${this.api}/${slug}`);
   }
 
+  getFeaturedProducts() {
+    return this.http.get(`${this.api}/featured`);
+  }
 }

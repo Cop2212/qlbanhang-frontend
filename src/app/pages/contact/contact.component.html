@@ -3,22 +3,46 @@
     <h1 class="page-title">Liên hệ với chúng tôi</h1>
 
     <div class="contact-wrapper">
+
       <div class="contact-info">
         <h3>Thông tin liên hệ</h3>
-        <p><strong>Địa chỉ:</strong> Hà Nội</p>
-        <p><strong>Hotline:</strong> 0909 123 456</p>
-        <p><strong>Email:</strong> support@myshop.com</p>
+
+        <p><strong>Địa chỉ:</strong> {{ setting?.address }}</p>
+        <p><strong>Hotline:</strong> {{ setting?.phone }}</p>
+        <p><strong>Email:</strong> {{ setting?.email }}</p>
       </div>
 
       <div class="contact-form">
-        <form>
-          <input type="text" placeholder="Họ tên">
-          <input type="text" placeholder="Số điện thoại">
-          <input type="email" placeholder="Email">
-          <textarea rows="5" placeholder="Nội dung"></textarea>
-          <button class="btn-primary">Gửi liên hệ</button>
+        <form [formGroup]="contactForm" (ngSubmit)="submit()">
+
+          <!-- NAME -->
+          <input type="text" placeholder="Họ tên" formControlName="name">
+          <div class="error" *ngIf="contactForm.get('name')?.touched && contactForm.get('name')?.invalid">
+            Vui lòng nhập họ tên hợp lệ (tối thiểu 2 ký tự).
+          </div>
+
+          <!-- PHONE -->
+          <input type="text" placeholder="Số điện thoại" formControlName="phone">
+          <div class="error" *ngIf="contactForm.get('phone')?.touched && contactForm.get('phone')?.invalid">
+            Số điện thoại không hợp lệ (VD: 03x, 05x, 07x, 08x, 09x).
+          </div>
+
+          <!-- EMAIL -->
+          <input type="email" placeholder="Email" formControlName="email">
+          <div class="error" *ngIf="contactForm.get('email')?.touched && contactForm.get('email')?.invalid">
+            Email không hợp lệ.
+          </div>
+
+          <!-- MESSAGE -->
+          <textarea rows="5" placeholder="Nội dung" formControlName="message"></textarea>
+          <div class="error" *ngIf="contactForm.get('message')?.touched && contactForm.get('message')?.invalid">
+            Nội dung phải ít nhất 5 ký tự.
+          </div>
+
+          <button class="btn-primary" type="submit">Gửi liên hệ</button>
         </form>
       </div>
+
     </div>
   </div>
 </section>

@@ -15,7 +15,7 @@
           <h1>{{ slider.title }}</h1>
 
           <div class="hero-buttons">
-            <a [routerLink]="slider.link" class="btn-primary">
+            <a routerLink="/products" class="btn-primary">
               Xem sản phẩm
             </a>
 
@@ -52,9 +52,11 @@
 
     <div class="product-grid">
 
-      <div class="product-card" *ngFor="let item of products">
+      <div class="product-card" *ngFor="let item of featuredProducts">
 
-        <img [src]="item.thumbnail" alt="product">
+        <div class="product-image">
+          <img [src]="item.thumbnail" alt="product">
+        </div>
 
         <h3>{{ item.name }}</h3>
 
@@ -63,7 +65,7 @@
         </p>
 
         <p class="price">
-          {{ item.price | number }} đ
+          {{ item.price | number }} vnđ
         </p>
 
         <a class="btn-secondary" [routerLink]="['/product', item.slug]">
@@ -87,12 +89,33 @@
       </div>
 
       <div class="consult-right">
-        <form>
-          <input type="text" placeholder="Họ và tên">
-          <input type="text" placeholder="Số điện thoại">
-          <input type="email" placeholder="Email">
-          <textarea rows="4" placeholder="Nội dung tư vấn"></textarea>
-          <button class="btn-primary">Gửi thông tin</button>
+        <form #f="ngForm" (ngSubmit)="submitForm()">
+
+          <input type="text" placeholder="Họ và tên" [(ngModel)]="form.name" name="name" required>
+
+          <!-- PHONE -->
+          <input type="text" placeholder="Số điện thoại" [(ngModel)]="form.phone" name="phone" required
+            pattern="^(0|\+84)(3|5|7|8|9)[0-9]{8}$" #phone="ngModel">
+
+          <div *ngIf="phone.invalid && phone.touched" class="text-danger small">
+            <span *ngIf="phone.errors?.['required']">Vui lòng nhập số điện thoại.</span>
+            <span *ngIf="phone.errors?.['pattern']">Số điện thoại không hợp lệ.</span>
+          </div>
+
+          <!-- EMAIL -->
+          <input type="email" placeholder="Email" [(ngModel)]="form.email" name="email" required email #email="ngModel">
+
+          <div *ngIf="email.invalid && email.touched" class="text-danger small">
+            <span *ngIf="email.errors?.['required']">Vui lòng nhập email.</span>
+            <span *ngIf="email.errors?.['email']">Email không đúng định dạng.</span>
+          </div>
+
+          <textarea rows="4" placeholder="Nội dung tư vấn" [(ngModel)]="form.message" name="message"></textarea>
+
+          <button class="btn-primary" type="submit" [disabled]="f.invalid">
+            Gửi thông tin
+          </button>
+
         </form>
       </div>
     </div>

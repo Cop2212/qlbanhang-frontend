@@ -1,0 +1,65 @@
+.about-page {
+    padding: 60px 0;
+}
+
+.about-logo {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.about-logo img {
+    height: 80px;
+}
+
+.about-intro {
+    max-width: 900px;
+    margin: auto;
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.about-title {
+    font-size: 34px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.about-content {
+    font-size: 16px;
+    line-height: 1.8;
+    color: #555;
+}
+
+.company-info-section {
+    max-width: 700px;
+    margin: auto;
+}
+
+.section-title {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 30px;
+}
+
+.company-card {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 30px;
+    background: #fafafa;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px dashed #ddd;
+}
+
+.label {
+    font-weight: 600;
+    color: #666;
+}
+
+.value {
+    font-weight: 500;
+}

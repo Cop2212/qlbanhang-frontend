@@ -36,20 +36,14 @@
 .hero-content {
   position: absolute;
   inset: 0;
-
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-
-  max-width: 1200px;
-  margin: auto;
-  padding: 0 60px;
-
+  align-items: center;
   color: white;
 }
 
 .hero-inner {
-  padding-left: 80px;
+  max-width: 1200px;
+  margin: auto;
 }
 
 /* nav button */
@@ -60,9 +54,19 @@
   background: rgba(0, 0, 0, 0.4);
   color: white;
   border: none;
-  font-size: 30px;
-  padding: 10px 15px;
+  font-size: 26px;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
+  transition: 0.3s;
+}
+
+.nav:hover {
+  background: rgba(0, 0, 0, 0.6);
 }
 
 .prev {
@@ -137,10 +141,9 @@
 .btn-outline {
   border: 2px solid white;
   color: white;
-  padding: 12px 26px;
+  padding: 12px 22px;
   border-radius: 6px;
   text-decoration: none;
-  margin-left: 10px;
 }
 
 .btn-outline:hover {
@@ -150,17 +153,10 @@
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
 }
 
-.btn-outline {
-  border: 1px solid white;
-  padding: 12px 22px;
-  color: white;
-  border-radius: 6px;
-}
-
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 100px;
+  padding: 0 20px;
 }
 
 @media (max-width: 992px) {
@@ -177,17 +173,12 @@
     font-size: 16px;
   }
 
-  .hero-inner {
-    padding-left: 50px;
-  }
-
 }
 
 @media (max-width: 600px) {
 
   .hero-content {
-    padding: 0 30px;
-    top: 20%;
+    padding: 0 20px;
   }
 
   .hero-content h1 {
@@ -204,20 +195,20 @@
     gap: 10px;
   }
 
-  .hero-inner {
-    padding-left: 25px;
-  }
-
 }
 
 @media (max-width: 768px) {
 
   .hero {
-    height: 420px;
+    min-height: 420px;
   }
 
   .hero-bg {
     height: 420px;
+  }
+
+  .hero-content h1 {
+    font-size: 28px;
   }
 
 }
@@ -236,11 +227,24 @@
   font-weight: 700;
 }
 
+.product-image {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 /* GRID */
 
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 25px;
 }
 
@@ -260,8 +264,8 @@
 
 .product-card img {
   width: 100%;
-  height: 200px;
-  object-fit: contain;
+  object-fit: cover;
+  border-radius: 8px;
   margin-bottom: 15px;
   transition: transform 0.3s ease;
 }

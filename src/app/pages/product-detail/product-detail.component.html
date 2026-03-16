@@ -8,7 +8,9 @@
       <!-- GALLERY -->
       <div class="product-gallery">
 
-        <img class="main-image" [src]="mainImage || product.thumbnail">
+        <div class="main-image-box">
+          <img class="main-image" [src]="mainImage || product.thumbnail">
+        </div>
 
         <div class="thumbnail-list">
 
@@ -66,14 +68,185 @@
 
         <div *ngIf="activeTab === 'reviews'">
 
-          <div class="review">
-            <strong>Nguyễn Văn A</strong>
-            <p>Sản phẩm rất tốt.</p>
+          <div class="rating-summary">
+
+            <div class="rating-score">
+              {{ avgRating }}
+              <span>/5</span>
+            </div>
+
+            <div class="rating-stars">
+              <span *ngFor="let star of [1,2,3,4,5]">
+                {{ star <= avgRating ? '★' : '☆' }} </span>
+            </div>
+
+            <p class="rating-total">
+              {{ totalReviews }} đánh giá
+            </p>
+
           </div>
 
-          <div class="review">
-            <strong>Trần Thị B</strong>
-            <p>Giao hàng nhanh.</p>
+          <div class="rating-bars">
+
+            <div class="rating-row" *ngFor="let star of [5,4,3,2,1]">
+
+              <span class="star-label">
+                {{star}}★
+              </span>
+
+              <div class="bar">
+
+                <div class="fill" [style.width.%]="
+           (ratingStats[star] || 0) / totalReviews * 100">
+                </div>
+
+              </div>
+
+              <span class="count">
+                {{ ratingStats[star] || 0 }}
+              </span>
+
+            </div>
+
+          </div>
+
+          <!-- LIST REVIEW -->
+
+          <div class="review-filter">
+
+            <button [class.active]="selectedRating === null" (click)="filterByRating(null)">
+              Tất cả
+            </button>
+
+            <button *ngFor="let star of [5,4,3,2,1]" [class.active]="selectedRating === star"
+              (click)="filterByRating(star)">
+
+              {{star}}★ ({{ ratingStats[star] || 0 }})
+
+            </button>
+
+          </div>
+
+          <div class="reviews-wrapper">
+
+            <!-- LIST REVIEW -->
+            <div class="review-list">
+
+              <div class="review-card" *ngFor="let r of filteredReviews">
+
+                <div class="review-avatar">
+                  {{ r.name.charAt(0) }}
+                </div>
+
+                <div class="review-content">
+
+                  <div class="review-header">
+
+                    <div class="review-user">
+                      <strong class="review-name">
+                        {{ r.name }}
+                      </strong>
+
+                      <div class="review-email">
+                        {{ r.email }}
+                      </div>
+                    </div>
+
+                    <span class="review-date">
+                      {{ r.created_at | date:'dd/MM/yyyy' }}
+                    </span>
+
+                  </div>
+
+                  <div class="review-rating">
+                    <span *ngFor="let star of [1,2,3,4,5]">
+                      {{ star <= r.rating ? '★' : '☆' }} </span>
+                  </div>
+
+                  <p class="review-comment">
+                    {{ r.comment }}
+                  </p>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="review-pagination">
+
+              <button (click)="loadReviews(currentPage - 1)" [disabled]="currentPage === 1">
+                ←
+              </button>
+
+              <button *ngFor="let p of [].constructor(lastPage); let i = index" (click)="loadReviews(i+1)"
+                [class.active]="currentPage === i+1">
+
+                {{ i+1 }}
+
+              </button>
+
+              <button (click)="loadReviews(currentPage + 1)" [disabled]="currentPage === lastPage">
+                →
+              </button>
+
+            </div>
+
+          </div>
+
+          <!-- REVIEW FORM -->
+          <div class="review-form">
+
+            <h3>Viết đánh giá</h3>
+
+            <form #reviewForm="ngForm" (ngSubmit)="submitReview()" novalidate>
+
+              <div class="form-row">
+                <input type="text" placeholder="Tên của bạn" [(ngModel)]="review.name" name="name" required
+                  #name="ngModel">
+
+                <small class="error" *ngIf="name.invalid && name.touched">
+                  Vui lòng nhập tên
+                </small>
+              </div>
+
+              <div class="form-row">
+                <input type="email" placeholder="Email" [(ngModel)]="review.email" name="email" required
+                  #email="ngModel">
+
+                <small class="error" *ngIf="email.invalid && email.touched">
+                  Email không hợp lệ
+                </small>
+              </div>
+
+              <div class="form-row">
+                <select [(ngModel)]="review.rating" name="rating" required #rating="ngModel">
+
+                  <option value="">Vote</option>
+                  <option value="5">★★★★★ (5)</option>
+                  <option value="4">★★★★ (4)</option>
+                  <option value="3">★★★ (3)</option>
+                  <option value="2">★★ (2)</option>
+                  <option value="1">★ (1)</option>
+
+                </select>
+
+                <small class="error" *ngIf="rating.invalid && rating.touched">
+                  Vui lòng chọn Vote
+                </small>
+              </div>
+
+              <div class="form-row">
+                <textarea placeholder="Nhập đánh giá của bạn" [(ngModel)]="review.comment" name="comment" required>
+                    </textarea>
+              </div>
+
+              <button class="btn-primary" type="submit" [disabled]="reviewForm.invalid">
+                Gửi đánh giá
+              </button>
+
+            </form>
+
           </div>
 
         </div>
