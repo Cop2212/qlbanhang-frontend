@@ -235,6 +235,47 @@ button {
   border-radius: 8px;
 }
 
+//spec
+.spec-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 20px 0 10px;
+}
+
+.spec-wrapper {
+  border: 1px solid #eee;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.spec-row {
+  display: grid;
+  grid-template-columns: 40% 60%;
+  border-bottom: 1px solid #eee;
+}
+
+.spec-row:last-child {
+  border-bottom: none;
+}
+
+.spec-name {
+  background: #f9f9f9;
+  padding: 10px;
+  font-weight: 500;
+}
+
+.spec-value {
+  padding: 10px;
+  color: #333;
+}
+
+//price
+.price {
+  color: red;
+  font-size: 28px;
+  font-weight: 700;
+}
+
 .form-row {
   margin-bottom: 15px;
 }

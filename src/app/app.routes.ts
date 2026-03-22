@@ -12,7 +12,7 @@ export const routes: Routes = [
     { path: 'products', component: ProductsComponent },
     { path: 'about', component: AboutComponent },
     { path: 'contact', component: ContactComponent },
-    { path: 'cart', component: CartComponent },
+    // { path: 'cart', component: CartComponent },
     { path: 'checkout', component: CheckoutComponent },
     { path: 'product/:slug', component: ProductDetailComponent },
 ];

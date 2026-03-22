@@ -13,8 +13,24 @@ export class ProductService {
 
   constructor(private http: HttpClient) { }
 
-  getProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(this.api);
+  getProducts(
+    page: number = 1,
+    categoryId: number | null = null,
+    sort: string = 'default',
+    perPage: number = 8
+  ): Observable<any> {
+
+    let url = `${this.api}?page=${page}&per_page=${perPage}`;
+
+    if (categoryId) {
+      url += `&category_id=${categoryId}`;
+    }
+
+    if (sort && sort !== 'default') {
+      url += `&sort=${sort}`;
+    }
+
+    return this.http.get<any>(url);
   }
 
   getProductDetail(slug: string): Observable<any> {
@@ -23,5 +39,9 @@ export class ProductService {
 
   getFeaturedProducts() {
     return this.http.get(`${this.api}/featured`);
+  }
+
+  getBestSeller() {
+    return this.http.get(`${this.api}/best-seller`);
   }
 }

@@ -32,12 +32,30 @@
           {{product.price | number}} đ
         </p>
 
-        <p class="short-desc">
-          {{product.short_description}}
-        </p>
+        <div class="product-specs" *ngIf="product.specifications?.length">
+
+          <h3 class="spec-title">Thông số kỹ thuật</h3>
+
+          <div class="spec-wrapper">
+
+            <div class="spec-row" *ngFor="let spec of product.specifications">
+
+              <div class="spec-name">
+                {{ spec.name || spec.template?.name }}
+              </div>
+
+              <div class="spec-value">
+                {{ spec.value }}
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
 
         <button class="btn-primary">
-          Thêm vào giỏ hàng
+          Đăng ký nhận liên hệ tư vấn!
         </button>
 
       </div>
@@ -63,7 +81,13 @@
       <div class="tab-content">
 
         <div *ngIf="activeTab === 'description'">
+
+          <h2 class="desc-title">
+            {{ product.short_description }}
+          </h2>
+
           <div class="description" [innerHTML]="product.description"></div>
+
         </div>
 
         <div *ngIf="activeTab === 'reviews'">

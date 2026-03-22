@@ -3,14 +3,96 @@
 
     <h1 class="page-title">Danh sách sản phẩm</h1>
 
+    <div class="product-toolbar">
+
+      <!-- LEFT: SORT -->
+      <div class="toolbar-left">
+        <span class="label">Sắp xếp:</span>
+
+        <button (click)="changeSort('default')" [class.active]="sort === 'default'">
+          Mặc định
+        </button>
+
+        <button (click)="changeSort('price_asc')" [class.active]="sort === 'price_asc'">
+          Giá ↑
+        </button>
+
+        <button (click)="changeSort('price_desc')" [class.active]="sort === 'price_desc'">
+          Giá ↓
+        </button>
+
+        <button (click)="changeSort('best_seller')" [class.active]="sort === 'best_seller'">
+          Bán chạy
+        </button>
+
+        <button (click)="changeSort('featured')" [class.active]="sort === 'featured'">
+          Nổi bật
+        </button>
+      </div>
+
+      <!-- RIGHT: PAGE SIZE -->
+      <div class="toolbar-right">
+        <span>Hiển thị:</span>
+
+        <select [(ngModel)]="perPage" (change)="changePerPage()">
+          <option [value]="8">8</option>
+          <option [value]="12">12</option>
+          <option [value]="16">16</option>
+          <option [value]="20">20</option>
+        </select>
+
+        <span>sản phẩm</span>
+      </div>
+
+    </div>
+
     <div class="layout">
 
       <!-- SIDEBAR -->
       <aside class="sidebar">
-        <h3>Danh mục sản phẩm</h3>
-        <ul>
-          <li *ngFor="let cat of categories">{{ cat }}</li>
-        </ul>
+
+        <!-- CATEGORY -->
+        <div class="sidebar-block">
+          <h3>Danh mục sản phẩm</h3>
+          <ul>
+
+            <!-- ALL -->
+            <li (click)="selectCategory(null)" [class.active]="selectedCategory === null">
+              Tất cả
+            </li>
+
+            <!-- CATEGORY -->
+            <li *ngFor="let cat of categories" (click)="selectCategory(cat.id)"
+              [class.active]="selectedCategory === cat.id">
+              {{ cat.name }}
+            </li>
+
+          </ul>
+        </div>
+
+        <!-- BEST SELLER -->
+        <div class="sidebar-block">
+          <h3>Sản phẩm bán chạy</h3>
+
+          <div class="best-seller-list">
+
+            <a class="best-item" *ngFor="let item of bestSellers" [routerLink]="['/product', item.slug]">
+
+              <img [src]="item.thumbnail">
+
+              <div class="info">
+                <h4>{{ item.name }}</h4>
+
+                <p class="price">
+                  {{ item.price | number }} đ
+                </p>
+              </div>
+
+            </a>
+
+          </div>
+        </div>
+
       </aside>
 
       <!-- PRODUCT CONTENT -->
@@ -37,27 +119,21 @@
 
         <!-- PAGINATION -->
         <div class="pagination">
-          <button>«</button>
-          <button class="active">1</button>
-          <button>2</button>
-          <button>3</button>
-          <button>»</button>
+          <button (click)="loadProducts(currentPage - 1)" [disabled]="currentPage === 1">
+            «
+          </button>
+
+          <button *ngFor="let p of [].constructor(lastPage); let i = index" (click)="loadProducts(i+1)"
+            [class.active]="currentPage === i+1">
+            {{ i+1 }}
+          </button>
+
+          <button (click)="loadProducts(currentPage + 1)" [disabled]="currentPage === lastPage">
+            »
+          </button>
         </div>
 
       </div>
     </div>
-
-    <!-- BEST SELLER -->
-    <div class="best-seller">
-      <h2>Sản phẩm bán chạy</h2>
-      <div class="product-grid">
-        <div class="product-card" *ngFor="let item of products.slice(0,4)">
-          <div class="image-placeholder"></div>
-          <h4>{{ item.name }}</h4>
-          <p class="price">{{ item.price | number }} đ</p>
-        </div>
-      </div>
-    </div>
-
   </div>
 </section>

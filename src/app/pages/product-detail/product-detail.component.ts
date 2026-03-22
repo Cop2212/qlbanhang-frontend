@@ -47,24 +47,23 @@ export class ProductDetailComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.route.paramMap.subscribe(params => {
+      const slug = params.get('slug');
 
-    const slug = this.route.snapshot.paramMap.get('slug');
+      if (slug) {
+        this.productService.getProductDetail(slug)
+          .subscribe(res => {
 
-    if (slug) {
-      this.productService.getProductDetail(slug)
-        .subscribe(res => {
+            this.product = res.product;
+            this.similarProducts = res.similar_products;
 
-          this.product = res.product;
+            this.mainImage = this.product.thumbnail;
 
-          this.similarProducts = res.similar_products;
-
-          this.mainImage = this.product.thumbnail;
-
-          this.loadReviews();
-        });
-    }
-
-
+            this.loadReviews();
+            window.scrollTo(0, 0); // scroll lên đầu (optional)
+          });
+      }
+    });
   }
 
   changeImage(img: string) {
