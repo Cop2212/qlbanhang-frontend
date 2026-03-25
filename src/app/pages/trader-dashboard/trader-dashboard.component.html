@@ -1,0 +1,68 @@
+<section class="dashboard-page">
+    <div class="container">
+
+        <h1>Chào mừng, {{ user?.name }}</h1>
+
+        <div class="actions">
+            <button class="btn-primary" (click)="logout()">Đăng xuất</button>
+        </div>
+
+        <!-- 👤 THÔNG TIN TÀI KHOẢN -->
+        <div class="card">
+            <h3>Thông tin tài khoản</h3>
+
+            <p><b>Tên:</b> {{ user?.name }}</p>
+            <p><b>Email:</b> {{ user?.email }}</p>
+            <p><b>Mã giới thiệu:</b> {{ user?.ref_code }}</p>
+
+            <button class="btn-outline mt-2" (click)="goChangePassword()">
+                🔒 Đổi mật khẩu
+            </button>
+        </div>
+
+        <!-- 🔗 LINK AFFILIATE -->
+        <div class="card">
+            <h3>Link giới thiệu</h3>
+
+            <input [value]="'http://localhost:4200?ref=' + user?.ref_code" readonly>
+
+            <button (click)="copyRef()">Copy</button>
+        </div>
+
+        <!-- 💰 HOA HỒNG -->
+        <div class="card">
+            <h3>Hoa hồng</h3>
+
+            <p>Tổng: {{ stats?.total | number:'1.0-0' }} đ</p>
+            <p>Đã trả: {{ stats?.paid | number:'1.0-0' }} đ</p>
+            <p>Chưa trả: {{ stats?.pending | number:'1.0-0' }} đ</p>
+        </div>
+
+        <!-- 🏦 THÔNG TIN NHẬN TIỀN -->
+        <form [formGroup]="form" (ngSubmit)="submit()" class="card">
+
+            <h3>Thông tin nhận tiền</h3>
+
+            <input placeholder="Ngân hàng" formControlName="bank_name">
+            <input placeholder="Số tài khoản" formControlName="bank_number">
+            <input placeholder="Chủ tài khoản" formControlName="bank_owner">
+            <input placeholder="Số điện thoại" formControlName="phone">
+
+            <button type="submit" [disabled]="form.invalid">
+                Lưu thông tin
+            </button>
+
+        </form>
+
+        <!-- 📊 TRẠNG THÁI -->
+        <div class="card">
+            <h3>Trạng thái hồ sơ</h3>
+
+            <span *ngIf="profile?.status === 'incomplete'">⚠️ Chưa nhập</span>
+            <span *ngIf="profile?.status === 'pending'">⏳ Đang duyệt</span>
+            <span *ngIf="profile?.status === 'approved'">✅ Đã duyệt</span>
+            <span *ngIf="profile?.status === 'rejected'">❌ Bị từ chối</span>
+        </div>
+
+    </div>
+</section>
