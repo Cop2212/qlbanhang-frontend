@@ -22,8 +22,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     })).pipe(
         catchError((error: HttpErrorResponse) => {
 
-            if (error.status === 401) {
-                // 🔥 token chết → logout luôn
+            // ✅ chỉ logout khi đã login rồi mà vẫn 401
+            if (error.status === 401 && token) {
                 auth.forceLogout();
             }
 
