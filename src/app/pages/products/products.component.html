@@ -114,6 +114,22 @@
               Xem chi tiết
             </a>
 
+            <!-- 🔥 AFFILIATE -->
+            <!-- 🔥 CHƯA LOGIN -->
+            <button *ngIf="!auth.user()" routerLink="/trader/login" class="btn-affiliate">
+              🔐 Đăng nhập để lấy link
+            </button>
+
+            <!-- 🔥 ĐÃ LOGIN NHƯNG CHƯA DUYỆT -->
+            <div *ngIf="auth.user() && auth.user()?.profile?.status !== 'approved'" class="affiliate-warning">
+              ⚠️ Cập nhật thông tin để kích hoạt affiliate
+            </div>
+
+            <!-- 🔥 ĐÃ DUYỆT -->
+            <button *ngIf="auth.user()?.profile?.status === 'approved'" (click)="copyLink(item)" class="btn-affiliate">
+              🔗 Lấy link
+            </button>
+
           </div>
         </div>
 

@@ -3,12 +3,14 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { map, of } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
+import { switchMap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
     private token: string | null = null;
     public isLoggedIn = signal(false);
+    public user = signal<any>(null);
 
     private authChecked = false;
 
@@ -16,24 +18,41 @@ export class AuthService {
 
     login(token: string) {
         this.token = token;
+        localStorage.setItem('access_token', token);
+        this.user.set(null);
         this.isLoggedIn.set(true);
     }
 
     logout() {
-        this.http.post('http://localhost:8000/api/trader/logout', {}, {
-            withCredentials: true
-        }).subscribe({
+        this.http.post('http://localhost:8000/api/trader/logout', {}).subscribe({
             next: () => { },
             error: () => { },
             complete: () => {
                 this.token = null;
+                this.user.set(null);
                 this.isLoggedIn.set(false);
-                this.router.navigate(['/trader/login']); // 🔥 thêm dòng này
+                this.router.navigate(['/trader/login']);
             }
         });
     }
 
+    init() {
+        const token = localStorage.getItem('access_token');
+
+        if (token) {
+            this.token = token;
+            this.isLoggedIn.set(true);
+        }
+    }
+
     getToken() {
+        if (this.token) return this.token;
+
+        const stored = localStorage.getItem('access_token');
+        if (stored) {
+            this.token = stored;
+        }
+
         return this.token;
     }
 
@@ -49,6 +68,9 @@ export class AuthService {
         ).pipe(
             tap(res => {
                 this.login(res.access_token);
+            }),
+            switchMap(() => this.loadUser()),
+            tap(() => {
                 this.authChecked = true;
             }),
             catchError(() => {
@@ -60,8 +82,28 @@ export class AuthService {
 
     forceLogout() {
         this.token = null;
+        this.user.set(null);
         this.isLoggedIn.set(false);
         this.authChecked = true;
         this.router.navigate(['/trader/login']);
+    }
+
+    loadUser() {
+        return this.http.get('http://localhost:8000/api/trader/me').pipe(
+            tap((res: any) => {
+
+                // 🔥 GỘP TẠI ĐÂY
+                this.user.set({
+                    ...res.user,
+                    profile: res.profile,
+                    stats: res.stats
+                });
+
+            }),
+            catchError(() => {
+                this.user.set(null);
+                return of(null);
+            })
+        );
     }
 }

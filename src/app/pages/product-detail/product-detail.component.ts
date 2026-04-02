@@ -4,6 +4,9 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ProductService } from '../../services/product.service';
 import { ReviewService } from '../../services/review.service';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
+import { TraderService } from '../../services/trader.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -40,13 +43,25 @@ export class ProductDetailComponent implements OnInit {
 
   mainImage: string = '';
 
+  showForm = false;
+  consult: any = {};
+
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
-    private reviewService: ReviewService
+    private reviewService: ReviewService,
+    private http: HttpClient,
+    private traderService: TraderService
   ) { }
 
-  ngOnInit(): void {
+  ngOnInit() {
+
+    this.route.queryParams.subscribe(params => {
+      if (params['ref']) {
+        localStorage.setItem('ref_code', params['ref']);
+      }
+    });
+
     this.route.paramMap.subscribe(params => {
       const slug = params.get('slug');
 
@@ -60,7 +75,7 @@ export class ProductDetailComponent implements OnInit {
             this.mainImage = this.product.thumbnail;
 
             this.loadReviews();
-            window.scrollTo(0, 0); // scroll lên đầu (optional)
+            window.scrollTo(0, 0);
           });
       }
     });
@@ -135,6 +150,35 @@ export class ProductDetailComponent implements OnInit {
 
       });
 
+  }
+
+  openForm() {
+    this.showForm = true;
+  }
+
+  closeForm() {
+    this.showForm = false;
+  }
+
+  submitConsultation() {
+
+    const ref = localStorage.getItem('ref_code');
+    const traderId = localStorage.getItem('trader_id');
+
+    const data = {
+      ...this.consult,
+      product_id: this.product.id,
+      trader_id: traderId,
+      ref_code: ref
+    };
+
+    console.log('CONSULT DATA:', data);
+
+    this.http.post(`${environment.apiUrl}/consultations`, data)
+      .subscribe(() => {
+        alert('Đã gửi!');
+        this.closeForm();
+      });
   }
 
 }

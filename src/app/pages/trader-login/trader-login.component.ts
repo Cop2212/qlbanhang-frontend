@@ -9,11 +9,12 @@ import { AuthService } from '../../services/auth.service';
   selector: 'app-trader-login',
   standalone: true,
   imports: [
-    ReactiveFormsModule, // để dùng formGroup
-    RouterModule,         // để dùng routerLink
+    ReactiveFormsModule,
+    RouterModule,
     CommonModule
   ],
   templateUrl: './trader-login.component.html',
+  styleUrls: ['./trader-login.component.scss'] // 🔥 THÊM DÒNG NÀY
 })
 export class TraderLoginComponent implements OnInit {
 
@@ -44,10 +45,9 @@ export class TraderLoginComponent implements OnInit {
         next: (res: any) => {
           this.auth.login(res.access_token);
 
-          this.http.get('http://localhost:8000/api/trader/me')
-            .subscribe(() => {
-              this.router.navigate(['/trader/dashboard']);
-            });
+          this.auth.loadUser().subscribe(() => {
+            this.router.navigate(['/trader/dashboard']);
+          });
         },
         error: () => alert('Sai tài khoản')
       });

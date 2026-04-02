@@ -25,21 +25,4 @@ export class App implements OnInit {
   ngOnInit() {
     this.auth.autoLogin().subscribe();
   }
-
-  autoLogin() {
-    if (this.isRefreshing) return;
-    this.isRefreshing = true;
-
-    this.http.post<any>('http://localhost:8000/api/trader/refresh', {}, {
-      withCredentials: true
-    }).subscribe({
-      next: (res) => {
-        this.auth.login(res.access_token);
-        this.isRefreshing = false;
-      },
-      error: () => {
-        this.isRefreshing = false;
-      }
-    });
-  }
 }

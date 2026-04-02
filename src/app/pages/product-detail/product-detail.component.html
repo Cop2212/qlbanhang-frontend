@@ -54,7 +54,7 @@
 
         </div>
 
-        <button class="btn-primary">
+        <button class="btn-primary" (click)="openForm()">
           Đăng ký nhận liên hệ tư vấn!
         </button>
 
@@ -322,3 +322,28 @@
   </div>
 
 </section>
+
+<div class="modal" *ngIf="showForm">
+
+  <div class="modal-overlay" (click)="closeForm()"></div>
+
+  <div class="modal-content">
+
+    <h3>Đăng ký tư vấn</h3>
+
+    <form (ngSubmit)="submitConsultation()">
+
+      <input placeholder="Họ tên" [(ngModel)]="consult.name" name="name" required>
+      <input placeholder="SĐT" [(ngModel)]="consult.phone" name="phone" required>
+      <input placeholder="Email" [(ngModel)]="consult.email" name="email">
+
+      <textarea placeholder="Nội dung" [(ngModel)]="consult.message" name="message"></textarea>
+
+      <button type="submit">Gửi</button>
+      <button type="button" (click)="closeForm()">Đóng</button>
+
+    </form>
+
+  </div>
+
+</div>

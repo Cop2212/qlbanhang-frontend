@@ -13,6 +13,7 @@ import { CommonModule } from '@angular/common';
     CommonModule
   ],
   templateUrl: './trader-register.component.html',
+  styleUrls: ['./trader-register.component.scss']
 })
 export class TraderRegisterComponent implements OnInit {
 

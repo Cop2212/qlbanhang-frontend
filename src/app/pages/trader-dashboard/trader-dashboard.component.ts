@@ -14,13 +14,12 @@ import { TraderService } from '../../services/trader.service';
         CommonModule,
         ReactiveFormsModule
     ],
-    templateUrl: './trader-dashboard.component.html'
+    templateUrl: './trader-dashboard.component.html',
+    styleUrls: ['./trader-dashboard.component.scss']
 })
 export class TraderDashboardComponent implements OnInit {
 
-    profile: any;
-    user: any;
-    stats: any;
+    baseUrl = window.location.origin;
 
     form: any;
 
@@ -50,20 +49,11 @@ export class TraderDashboardComponent implements OnInit {
             phone: ['', Validators.required],
         });
 
-        this.loadDashboard();
-    }
+        const user = this.auth.user();
 
-    loadDashboard() {
-        this.traderService.getMe()
-            .subscribe((res: any) => {
-                this.user = res.user;
-                this.profile = res.profile;
-                this.stats = res.stats;
-
-                if (this.profile) {
-                    this.form.patchValue(this.profile);
-                }
-            });
+        if (user?.profile) {
+            this.form.patchValue(user.profile);
+        }
     }
 
     submit() {
@@ -72,7 +62,7 @@ export class TraderDashboardComponent implements OnInit {
         this.traderService.updateProfile(this.form.value)
             .subscribe(() => {
                 alert('Lưu thành công');
-                this.loadDashboard();
+                this.auth.loadUser().subscribe();
             });
     }
 
@@ -81,12 +71,20 @@ export class TraderDashboardComponent implements OnInit {
     }
 
     copyRef() {
-        const link = `http://localhost:4200?ref=${this.user?.ref_code}`;
+        const user = this.auth.user();
+
+        const link = `http://localhost:4200?ref=${user?.ref_code}`;
+
         navigator.clipboard.writeText(link);
         alert('Đã copy link!');
     }
-    
+
     goChangePassword() {
         this.router.navigate(['/trader/change-password']);
+    }
+
+    getRefLink() {
+        const user = this.auth.user();
+        return `${this.baseUrl}?ref=${user?.ref_code}`;
     }
 }

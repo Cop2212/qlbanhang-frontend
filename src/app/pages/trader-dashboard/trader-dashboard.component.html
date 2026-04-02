@@ -1,7 +1,7 @@
 <section class="dashboard-page">
     <div class="container">
 
-        <h1>Chào mừng, {{ user?.name }}</h1>
+        <h1>Chào mừng, {{ auth.user()?.name }}</h1>
 
         <div class="actions">
             <button class="btn-primary" (click)="logout()">Đăng xuất</button>
@@ -11,9 +11,9 @@
         <div class="card">
             <h3>Thông tin tài khoản</h3>
 
-            <p><b>Tên:</b> {{ user?.name }}</p>
-            <p><b>Email:</b> {{ user?.email }}</p>
-            <p><b>Mã giới thiệu:</b> {{ user?.ref_code }}</p>
+            <p><b>Tên:</b> {{ auth.user()?.name }}</p>
+            <p><b>Email:</b> {{ auth.user()?.email }}</p>
+            <p><b>Mã giới thiệu:</b> {{ auth.user()?.ref_code }}</p>
 
             <button class="btn-outline mt-2" (click)="goChangePassword()">
                 🔒 Đổi mật khẩu
@@ -24,18 +24,32 @@
         <div class="card">
             <h3>Link giới thiệu</h3>
 
-            <input [value]="'http://localhost:4200?ref=' + user?.ref_code" readonly>
-
-            <button (click)="copyRef()">Copy</button>
+            <div class="link-box">
+                <input [value]="getRefLink()" readonly>
+                <button class="btn-primary" (click)="copyRef()">Copy</button>
+            </div>
         </div>
 
         <!-- 💰 HOA HỒNG -->
         <div class="card">
             <h3>Hoa hồng</h3>
 
-            <p>Tổng: {{ stats?.total | number:'1.0-0' }} đ</p>
-            <p>Đã trả: {{ stats?.paid | number:'1.0-0' }} đ</p>
-            <p>Chưa trả: {{ stats?.pending | number:'1.0-0' }} đ</p>
+            <div class="stats">
+                <div>
+                    <span>Tổng</span>
+                    <b>{{ auth.user()?.stats?.total | number:'1.0-0' }} đ</b>
+                </div>
+
+                <div>
+                    <span>Đã trả</span>
+                    <b>{{ auth.user()?.stats?.paid | number:'1.0-0' }} đ</b>
+                </div>
+
+                <div>
+                    <span>Chưa trả</span>
+                    <b>{{ auth.user()?.stats?.pending | number:'1.0-0' }} đ</b>
+                </div>
+            </div>
         </div>
 
         <!-- 🏦 THÔNG TIN NHẬN TIỀN -->
@@ -58,10 +72,10 @@
         <div class="card">
             <h3>Trạng thái hồ sơ</h3>
 
-            <span *ngIf="profile?.status === 'incomplete'">⚠️ Chưa nhập</span>
-            <span *ngIf="profile?.status === 'pending'">⏳ Đang duyệt</span>
-            <span *ngIf="profile?.status === 'approved'">✅ Đã duyệt</span>
-            <span *ngIf="profile?.status === 'rejected'">❌ Bị từ chối</span>
+            <span *ngIf="auth.user()?.profile?.status === 'incomplete'">⚠️ Chưa nhập</span>
+            <span *ngIf="auth.user()?.profile?.status === 'pending'">⏳ Đang duyệt</span>
+            <span *ngIf="auth.user()?.profile?.status === 'approved'">✅ Đã duyệt</span>
+            <span *ngIf="auth.user()?.profile?.status === 'rejected'">❌ Bị từ chối</span>
         </div>
 
     </div>

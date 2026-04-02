@@ -47,7 +47,17 @@ export class ContactComponent implements OnInit {
       return;
     }
 
-    this.consultationService.sendConsultation(this.contactForm.value)
+    const payload = {
+      ...this.contactForm.value,
+      product_id: 0, // hoặc optional nếu contact chung
+      ref_code: localStorage.getItem('ref_code'),
+      trader_id: localStorage.getItem('trader_id'),
+      utm_source: localStorage.getItem('utm_source'),
+      utm_medium: localStorage.getItem('utm_medium'),
+      utm_campaign: localStorage.getItem('utm_campaign'),
+    };
+
+    this.consultationService.sendConsultation(payload)
       .subscribe({
         next: () => {
           alert('Gửi liên hệ thành công!');

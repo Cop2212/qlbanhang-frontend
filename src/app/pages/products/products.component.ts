@@ -2,8 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductService } from '../../services/product.service';
 import { CategoryService } from '../../services/category.service';
+import { AuthService } from '../../services/auth.service';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-products',
@@ -25,7 +28,12 @@ export class ProductsComponent implements OnInit {
   sort: string = 'default';
   perPage: number = 8;
 
-  constructor(private productService: ProductService, private categoryService: CategoryService) { }
+  constructor(
+    private productService: ProductService,
+    private categoryService: CategoryService,
+    public auth: AuthService,
+    private http: HttpClient
+  ) { }
 
   ngOnInit(): void {
     this.loadCategories();
@@ -70,5 +78,16 @@ export class ProductsComponent implements OnInit {
 
   changePerPage() {
     this.loadProducts(1);
+  }
+
+  copyLink(item: any) {
+    this.http.post(`${environment.apiUrl}/trader/links`, {
+      product_id: item.id
+    }).subscribe((res: any) => {
+
+      navigator.clipboard.writeText(res.link);
+
+      alert('Đã copy link!');
+    });
   }
 }

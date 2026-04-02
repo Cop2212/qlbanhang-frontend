@@ -8,21 +8,20 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     const auth = inject(AuthService);
     const token = auth.getToken();
 
-    const isAuthApi = req.url.includes('/trader');
-
     let headers: any = {};
 
     if (token) {
         headers['Authorization'] = `Bearer ${token}`;
     }
 
+    const isRefreshApi = req.url.includes('/refresh') || req.url.includes('/logout');
+
     return next(req.clone({
         setHeaders: headers,
-        withCredentials: isAuthApi
+        withCredentials: true
     })).pipe(
         catchError((error: HttpErrorResponse) => {
 
-            // ✅ chỉ logout khi đã login rồi mà vẫn 401
             if (error.status === 401 && token) {
                 auth.forceLogout();
             }
