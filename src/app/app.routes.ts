@@ -34,5 +34,7 @@ export const routes: Routes = [
         path: 'trader/change-password',
         component: TraderChangePassword,
         canActivate: [TraderAuthGuard] // 🔒 phải login mới vào được
-    }
+    },
+
+    { path: '**', redirectTo: '' }
 ];
