@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-trader-login',
@@ -40,7 +41,7 @@ export class TraderLoginComponent implements OnInit {
       return;
     }
 
-    this.http.post('http://localhost:8000/api/trader/login', this.form.value, { withCredentials: true })
+    this.http.post(`${environment.apiUrl}/trader/login`, this.form.value, { withCredentials: true })
       .subscribe({
         next: (res: any) => {
           this.auth.login(res.access_token);

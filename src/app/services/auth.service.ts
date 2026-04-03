@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { map, of } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { switchMap } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -24,7 +25,7 @@ export class AuthService {
     }
 
     logout() {
-        this.http.post('http://localhost:8000/api/trader/logout', {}).subscribe({
+        this.http.post(`${environment.apiUrl}/trader/logout`, {}).subscribe({
             next: () => { },
             error: () => { },
             complete: () => {
@@ -62,7 +63,7 @@ export class AuthService {
 
     autoLogin() {
         return this.http.post<any>(
-            'http://localhost:8000/api/trader/refresh',
+            `${environment.apiUrl}/trader/refresh`,
             {},
             { withCredentials: true }
         ).pipe(
@@ -89,7 +90,7 @@ export class AuthService {
     }
 
     loadUser() {
-        return this.http.get('http://localhost:8000/api/trader/me').pipe(
+        return this.http.get(`${environment.apiUrl}/trader/me`).pipe(
             tap((res: any) => {
 
                 // 🔥 GỘP TẠI ĐÂY

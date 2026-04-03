@@ -73,7 +73,7 @@ export class TraderDashboardComponent implements OnInit {
     copyRef() {
         const user = this.auth.user();
 
-        const link = `http://localhost:4200?ref=${user?.ref_code}`;
+        const link = `${this.baseUrl}?ref=${user?.ref_code}`;
 
         navigator.clipboard.writeText(link);
         alert('Đã copy link!');

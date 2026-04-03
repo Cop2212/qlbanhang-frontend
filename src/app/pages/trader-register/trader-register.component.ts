@@ -3,6 +3,7 @@ import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-trader-register',
@@ -48,7 +49,7 @@ export class TraderRegisterComponent implements OnInit {
   register() {
     if (this.form.invalid) return;
 
-    this.http.post('http://localhost:8000/api/trader/register', this.form.value)
+    this.http.post(`${environment.apiUrl}/trader/register`, this.form.value)
       .subscribe({
         next: (res: any) => {
           alert('Đăng ký thành công!');

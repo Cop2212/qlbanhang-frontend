@@ -1,4 +1,9 @@
+// export const environment = {
+//     production: false,
+//     apiUrl: 'http://localhost:8000/api'
+// };
+
 export const environment = {
-    production: false,
-    apiUrl: 'http://localhost:8000/api'
+    production: true,
+    apiUrl: 'https://qlbanhang-backend.onrender.com/api'
 };
