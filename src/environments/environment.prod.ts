@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    apiUrl: 'https://ten-mien-cua-ban.com/api'
+    apiUrl: 'https://qlbanhang-backend.onrender.com/api'
 };
