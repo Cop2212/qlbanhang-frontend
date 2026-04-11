@@ -77,7 +77,7 @@ export class AuthService {
                 this.authChecked = true;
             }),
             catchError(() => {
-                this.authChecked = true;
+                this.forceLogout();
                 return of(false);
             })
         );
@@ -88,7 +88,8 @@ export class AuthService {
         this.user.set(null);
         this.isLoggedIn.set(false);
         this.authChecked = true;
-        this.router.navigate(['/trader/login']);
+        localStorage.removeItem('access_token');
+        // Không navigate ở đây để tránh đuổi khách vãng lai
     }
 
     loadUser() {
