@@ -16,4 +16,8 @@ export class TraderService {
     updateProfile(data: any) {
         return this.http.post(`${this.base}/profile`, data);
     }
+
+    generateLink(product_id: number) {
+        return this.http.post(`${this.base}/links`, { product_id });
+    }
 }

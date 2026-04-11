@@ -17,6 +17,7 @@ export class HeaderComponent implements OnInit {
   setting?: Setting;
 
   phoneLink: string = '';
+  isMenuOpen: boolean = false;
 
   constructor(private settingService: SettingService) { }
 
@@ -38,6 +39,21 @@ export class HeaderComponent implements OnInit {
 
   isMobile(): boolean {
     return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  }
+
+  toggleMenu(): void {
+    this.isMenuOpen = !this.isMenuOpen;
+    if (this.isMenuOpen) {
+      document.body.style.overflow = 'hidden'; // Ngăn cuộn trang khi mở menu
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+  }
+
+  openChat(): void {
+    if ((window as any).Tawk_API) {
+      (window as any).Tawk_API.maximize();
+    }
   }
 
 }

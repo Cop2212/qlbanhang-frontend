@@ -1,8 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { SettingService } from '../../services/setting.service';
-import { ConsultationService } from '../../services/consultation.service';
+import { Setting } from '../../models/setting';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
+import { Title } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 
 @Component({
@@ -14,59 +18,50 @@ import { RouterModule } from '@angular/router';
 })
 export class ContactComponent implements OnInit {
 
-  setting: any;
-  contactForm!: FormGroup;
+  setting?: Setting;
+  contactForm: FormGroup;
+  mapUrl: SafeResourceUrl | null = null;
 
   constructor(
     private settingService: SettingService,
     private fb: FormBuilder,
-    private consultationService: ConsultationService
-  ) { }
-
-  ngOnInit(): void {
-
-    // Lấy setting
-    this.settingService.getSetting().subscribe((res: any) => {
-      this.setting = res;
-    });
-
-    // Regex chuẩn số điện thoại VN
-    const phoneRegex = /^(0|\+84)(3|5|7|8|9)[0-9]{8}$/;
-
+    private http: HttpClient,
+    private titleService: Title,
+    private sanitizer: DomSanitizer
+  ) {
     this.contactForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
-      phone: ['', [Validators.required, Validators.pattern(phoneRegex)]],
-      email: ['', [Validators.required, Validators.email]],
+      phone: ['', [Validators.required, Validators.pattern(/^(03|05|07|08|09)\d{8}$/)]],
+      email: ['', [Validators.email]],
       message: ['', [Validators.required, Validators.minLength(5)]]
     });
   }
 
-  submit() {
-    if (this.contactForm.invalid) {
-      this.contactForm.markAllAsTouched();
-      return;
-    }
+  ngOnInit(): void {
+    this.settingService.getSetting().subscribe(res => {
+      this.setting = res;
+      // Set Browser Title
+      if (res.site_name) {
+        this.titleService.setTitle(`Liên hệ | ${res.site_name}`);
+      }
 
-    const payload = {
-      ...this.contactForm.value,
-      product_id: 0, // hoặc optional nếu contact chung
-      ref_code: localStorage.getItem('ref_code'),
-      trader_id: localStorage.getItem('trader_id'),
-      utm_source: localStorage.getItem('utm_source'),
-      utm_medium: localStorage.getItem('utm_medium'),
-      utm_campaign: localStorage.getItem('utm_campaign'),
-    };
-
-    this.consultationService.sendConsultation(payload)
-      .subscribe({
-        next: () => {
-          alert('Gửi liên hệ thành công!');
-          this.contactForm.reset();
-        },
-        error: (err) => {
-          console.error(err);
-          alert('Gửi thất bại!');
-        }
-      });
+      // Generate Dynamic Map URL
+      if (res.address) {
+        const encodedAddress = encodeURIComponent(res.address);
+        const url = `https://maps.google.com/maps?q=${encodedAddress}&t=&z=13&ie=UTF8&iwloc=&output=embed`;
+        this.mapUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+      }
+    });
   }
+
+  submit() {
+    if (this.contactForm.valid) {
+      this.http.post(`${environment.apiUrl}/consultations`, this.contactForm.value)
+        .subscribe(() => {
+          alert('Gửi thông tin thành công!');
+          this.contactForm.reset();
+        });
+    }
+  }
+
 }

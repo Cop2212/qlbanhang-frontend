@@ -1,64 +1,66 @@
 .header {
-    background: #ffffff;
-    border-bottom: 1px solid #eee;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-200);
+    box-shadow: var(--shadow-sm);
     position: sticky;
     top: 0;
     z-index: 1000;
+    transition: var(--transition);
 }
 
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 24px;
-}
-
-/* layout */
 .header-top {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 70px;
+    height: 80px;
 }
 
 /* logo */
+.logo {
+    display: flex;
+    align-items: center;
+}
+
 .logo img {
-    height: auto;
-    max-height: 55px;
-    /* giới hạn chiều cao */
+    height: 50px;
     width: auto;
-    display: block;
 }
 
 .brand {
-    font-size: 22px;
-    font-weight: 700;
-    color: #00AEEF;
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--primary);
+    letter-spacing: -0.5px;
 }
 
-/* menu */
+/* desktop menu */
 .nav {
     display: flex;
-    gap: 30px;
+    gap: 35px;
 }
 
 .nav a {
-    text-decoration: none;
-    color: #333;
-    font-weight: 1000;
+    color: var(--gray-800);
+    font-weight: 600;
+    font-size: 15px;
     position: relative;
+    padding: 5px 0;
 }
 
-/* hover effect */
 .nav a::after {
     content: "";
     position: absolute;
-    bottom: -6px;
+    bottom: 0;
     left: 0;
     width: 0%;
-    height: 2px;
-    background: #00AEEF;
-    transition: 0.3s;
+    height: 3px;
+    background: var(--primary);
+    border-radius: 10px;
+    transition: var(--transition);
+}
+
+.nav a:hover, .nav a.active {
+    color: var(--primary);
 }
 
 .nav a:hover::after,
@@ -70,123 +72,148 @@
 .header-right {
     display: flex;
     align-items: center;
-    gap: 20px;
-}
-
-/* cart */
-.cart-link {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    text-decoration: none;
-    color: #333;
-    font-weight: 500;
-    padding: 8px 14px;
-    border-radius: 6px;
-    transition: 0.3s;
-}
-
-.cart-link:hover {
-    background: #f5f5f5;
-}
-
-.cart-icon {
-    font-size: 18px;
-}
-
-/* badge */
-.cart-count {
-    position: absolute;
-    top: -6px;
-    right: -6px;
-    background: #e53935;
-    color: white;
-    font-size: 11px;
-    padding: 2px 6px;
-    border-radius: 50px;
-}
-
-.cart-link:hover {
-    color: #00AEEF;
+    gap: 15px;
 }
 
 /* hotline */
 .hotline {
     display: flex;
     align-items: center;
-    gap: 10px;
-    background: #f8f8f8;
-    padding: 6px 12px;
-    border-radius: 8px;
+    gap: 12px;
+    background: var(--gray-100);
+    padding: 8px 16px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--gray-200);
 }
 
 .hotline-icon {
-    font-size: 18px;
-}
-
-.hotline-info {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.2;
-}
-
-.label {
-    font-size: 12px;
-    color: #777;
+    font-size: 20px;
 }
 
 .phone {
-    font-weight: 700;
-    color: #e53935;
+    font-weight: 800;
+    color: var(--secondary);
+    font-size: 16px;
 }
 
+/* btn-chat */
+.btn-chat {
+    background: var(--primary);
+    color: var(--white);
+    padding: 10px 20px;
+    border-radius: var(--radius-lg);
+    font-size: 14px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 14px rgba(0, 174, 239, 0.3);
+}
+
+.btn-chat:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+}
+
+/* Menu Toggle (Mobile Burger) */
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 20px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.menu-toggle .bar {
+    width: 100%;
+    height: 3px;
+    background-color: var(--dark);
+    border-radius: 10px;
+    transition: var(--transition);
+}
+
+/* Mobile Navigation */
+.mobile-menu-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 3000;
+    visibility: hidden;
+    opacity: 0;
+    transition: var(--transition);
+}
+
+.mobile-menu-overlay.open {
+    visibility: visible;
+    opacity: 1;
+}
+
+.mobile-nav {
+    position: absolute;
+    top: 0;
+    left: -280px;
+    width: 280px;
+    height: 100%;
+    background: var(--white);
+    transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+}
+
+.mobile-menu-overlay.open .mobile-nav {
+    left: 0;
+}
+
+.mobile-nav-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.mobile-nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.mobile-nav-links a {
+    font-size: 18px;
+    font-weight: 600;
+    padding: 10px 0;
+}
+
+.mobile-nav-links a.active {
+    color: var(--primary);
+}
+
+.close-btn {
+    font-size: 32px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
 
 @media (max-width: 992px) {
-
-    .nav {
-        gap: 20px;
-    }
-
-    .header-right {
-        gap: 15px;
-    }
-
+    .nav { gap: 20px; }
 }
 
 @media (max-width: 768px) {
-
-    .nav {
-        display: none;
+    .desktop-only {
+        display: none !important;
     }
 
-    .cart-text {
-        display: none;
+    .menu-toggle {
+        display: flex;
     }
 
-    .cart-link {
-        padding: 6px 8px;
-    }
-
-    .cart-icon {
-        font-size: 20px;
-    }
-
-    .hotline {
-        padding: 4px 8px;
-        gap: 6px;
-    }
-
-    .label {
-        display: none;
-    }
-
-    .phone {
-        font-size: 13px;
-    }
-
-    .header-top {
-        justify-content: space-between;
+    .header-top { 
+        height: 70px;
         position: relative;
     }
 
@@ -196,4 +223,15 @@
         transform: translateX(-50%);
     }
 
+    .phone {
+        font-size: 14px;
+    }
+    
+    .hotline {
+        padding: 6px 10px;
+    }
+
+    .label {
+        display: none;
+    }
 }

@@ -17,7 +17,8 @@ export class ProductService {
     page: number = 1,
     categoryId: number | null = null,
     sort: string = 'default',
-    perPage: number = 8
+    perPage: number = 8,
+    search: string = ''
   ): Observable<any> {
 
     let url = `${this.api}?page=${page}&per_page=${perPage}`;
@@ -28,6 +29,10 @@ export class ProductService {
 
     if (sort && sort !== 'default') {
       url += `&sort=${sort}`;
+    }
+
+    if (search) {
+      url += `&search=${search}`;
     }
 
     return this.http.get<any>(url);

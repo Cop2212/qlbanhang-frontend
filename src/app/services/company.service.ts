@@ -11,8 +11,8 @@ export class CompanyService {
 
     constructor(private http: HttpClient) { }
 
-    getCompany() {
-        return this.http.get(this.api);
-    }
+  getCompany() {
+    return this.http.get<any>(this.api);
+  }
 
 }

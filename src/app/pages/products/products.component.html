@@ -1,155 +1,114 @@
-<section class="products-page">
-  <div class="container">
-
-    <h1 class="page-title">Danh sách sản phẩm</h1>
-
-    <div class="product-toolbar">
-
-      <!-- LEFT: SORT -->
-      <div class="toolbar-left">
-        <span class="label">Sắp xếp:</span>
-
-        <button (click)="changeSort('default')" [class.active]="sort === 'default'">
-          Mặc định
-        </button>
-
-        <button (click)="changeSort('price_asc')" [class.active]="sort === 'price_asc'">
-          Giá ↑
-        </button>
-
-        <button (click)="changeSort('price_desc')" [class.active]="sort === 'price_desc'">
-          Giá ↓
-        </button>
-
-        <button (click)="changeSort('best_seller')" [class.active]="sort === 'best_seller'">
-          Bán chạy
-        </button>
-
-        <button (click)="changeSort('featured')" [class.active]="sort === 'featured'">
-          Nổi bật
-        </button>
-      </div>
-
-      <!-- RIGHT: PAGE SIZE -->
-      <div class="toolbar-right">
-        <span>Hiển thị:</span>
-
-        <select [(ngModel)]="perPage" (change)="changePerPage()">
-          <option [value]="8">8</option>
-          <option [value]="12">12</option>
-          <option [value]="16">16</option>
-          <option [value]="20">20</option>
-        </select>
-
-        <span>sản phẩm</span>
-      </div>
-
+<div class="products-page">
+  
+  <!-- Breadcrumb & Soft Header (Đồng bộ với các trang khác) -->
+  <div class="page-header-minimal">
+    <div class="container">
+      <nav class="breadcrumb">
+        <a routerLink="/">Trang chủ</a> <span>/</span> <span class="current">Cửa hàng</span>
+      </nav>
+      <h1 class="minimal-title">Danh mục sản phẩm</h1>
+      <div class="title-line"></div>
     </div>
+    <!-- Decorative background elements -->
+    <div class="decor-circle circle-1"></div>
+    <div class="decor-circle circle-2"></div>
+  </div>
 
-    <div class="layout">
-
-      <!-- SIDEBAR -->
-      <aside class="sidebar">
-
-        <!-- CATEGORY -->
-        <div class="sidebar-block">
-          <h3>Danh mục sản phẩm</h3>
-          <ul>
-
-            <!-- ALL -->
-            <li (click)="selectCategory(null)" [class.active]="selectedCategory === null">
-              Tất cả
-            </li>
-
-            <!-- CATEGORY -->
-            <li *ngFor="let cat of categories" (click)="selectCategory(cat.id)"
-              [class.active]="selectedCategory === cat.id">
-              {{ cat.name }}
-            </li>
-
-          </ul>
-        </div>
-
-        <!-- BEST SELLER -->
-        <div class="sidebar-block">
-          <h3>Sản phẩm bán chạy</h3>
-
-          <div class="best-seller-list">
-
-            <a class="best-item" *ngFor="let item of bestSellers" [routerLink]="['/product', item.slug]">
-
-              <img [src]="item.thumbnail">
-
-              <div class="info">
-                <h4>{{ item.name }}</h4>
-
-                <p class="price">
-                  {{ item.price | number }} đ
-                </p>
-              </div>
-
-            </a>
-
+  <div class="container container-content">
+    
+    <div class="products-layout-condensed">
+      
+      <!-- Sidebar Trái: TẤT CẢ BỘ LỌC -->
+      <aside class="compact-sidebar">
+        
+        <!-- Tìm kiếm -->
+        <div class="compact-filter">
+          <h5><span class="f-icon">🔍</span> TÌM KIẾM</h5>
+          <div class="small-search">
+            <input type="text" placeholder="Tìm theo tên sản phẩm..." [(ngModel)]="searchQuery" (input)="onSearch()">
           </div>
         </div>
 
+        <!-- Sắp xếp -->
+        <div class="compact-filter">
+          <h5><span class="f-icon">↕️</span> SẮP XẾP</h5>
+          <select class="small-select" (change)="onSortChange($event)">
+            <option value="default">Mới nhất nhất</option>
+            <option value="price_asc">Giá tăng dần</option>
+            <option value="price_desc">Giá giảm dần</option>
+          </select>
+        </div>
+
+        <!-- Danh mục (Thẻ Tag) -->
+        <div class="compact-filter">
+          <h5><span class="f-icon">🏷️</span> DANH MỤC</h5>
+          <div class="tag-cloud">
+            <span class="tag-item" [class.active]="!selectedCategoryId" (click)="filterByCategory(null)">Tất cả</span>
+            <span class="tag-item" *ngFor="let cat of categories" 
+                  [class.active]="selectedCategoryId === cat.id" (click)="filterByCategory(cat.id)">
+              {{ cat.name }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Bán chạy (List) -->
+        <div class="compact-filter best-sellers-aside" *ngIf="bestSellers.length > 0">
+          <h5><span class="f-icon">🔥</span> BÁN CHẠY</h5>
+          <div class="bs-mini-list">
+             <div class="bs-mini-item" *ngFor="let item of bestSellers" [routerLink]="['/product', item.slug]">
+                <img [src]="item.thumbnail" alt="p">
+                <div class="bs-mini-info">
+                   <div class="bs-mini-name">{{ item.name }}</div>
+                   <div class="bs-mini-price">{{ item.price | number }}đ</div>
+                </div>
+             </div>
+          </div>
+        </div>
       </aside>
 
-      <!-- PRODUCT CONTENT -->
-      <div class="content">
-
-        <!-- PRODUCT GRID -->
-        <div class="product-grid">
-          <div class="product-card" *ngFor="let item of products">
-
-            <img [src]="item.thumbnail" alt="{{item.name}}">
-
-            <h4>{{ item.name }}</h4>
-
-            <p class="price">
-              {{ item.price | number }} đ
-            </p>
-
-            <a class="btn-secondary" [routerLink]="['/product', item.slug]">
-              Xem chi tiết
-            </a>
-
-            <!-- 🔥 AFFILIATE -->
-            <!-- 🔥 CHƯA LOGIN -->
-            <button *ngIf="!auth.user()" routerLink="/trader/login" class="btn-affiliate">
-              🔐 Đăng nhập để lấy link
-            </button>
-
-            <!-- 🔥 ĐÃ LOGIN NHƯNG CHƯA DUYỆT -->
-            <div *ngIf="auth.user() && auth.user()?.profile?.status !== 'approved'" class="affiliate-warning">
-              ⚠️ Cập nhật thông tin để kích hoạt affiliate
-            </div>
-
-            <!-- 🔥 ĐÃ DUYỆT -->
-            <button *ngIf="auth.user()?.profile?.status === 'approved'" (click)="copyLink(item)" class="btn-affiliate">
-              🔗 Lấy link
-            </button>
-
-          </div>
+      <!-- Trung tâm: HIỂN THỊ SẢN PHẨM -->
+      <main class="products-main-content">
+        <div class="product-grid-compact">
+           <div class="compact-card" *ngFor="let item of products">
+              <div class="card-img-box" [routerLink]="['/product', item.slug]">
+                 <img [src]="item.thumbnail" alt="p">
+                 <div class="card-badge" *ngIf="item.is_new">NEW</div>
+              </div>
+              <div class="card-body-compact">
+                 <div class="card-brand">{{ item.brand?.name || 'CHẤT LƯỢNG CAO' }}</div>
+                 <h3 class="card-title" [routerLink]="['/product', item.slug]">{{ item.name }}</h3>
+                 <div class="card-price-row">
+                    <span class="p-new">{{ item.price | number }}đ</span>
+                    <span class="p-old">{{ (item.price * 1.1) | number }}đ</span>
+                 </div>
+                 <div class="card-footer-modern">
+                    <button (click)="openZalo(item)" class="btn-chat-modern">
+                       💬 Tư vấn
+                    </button>
+                    <a [routerLink]="['/product', item.slug]" class="btn-detail-modern">
+                       CHI TIẾT ➔
+                    </a>
+                 </div>
+              </div>
+           </div>
         </div>
 
-        <!-- PAGINATION -->
-        <div class="pagination">
-          <button (click)="loadProducts(currentPage - 1)" [disabled]="currentPage === 1">
-            «
-          </button>
-
-          <button *ngFor="let p of [].constructor(lastPage); let i = index" (click)="loadProducts(i+1)"
-            [class.active]="currentPage === i+1">
-            {{ i+1 }}
-          </button>
-
-          <button (click)="loadProducts(currentPage + 1)" [disabled]="currentPage === lastPage">
-            »
-          </button>
+        <!-- Pagination -->
+        <div class="compact-pagination" *ngIf="lastPage > 1">
+           <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1" class="page-nav">❮</button>
+           <span class="page-info">Trang <b>{{ currentPage }}</b> trên {{ lastPage }}</span>
+           <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === lastPage" class="page-nav">❯</button>
         </div>
 
-      </div>
+        <!-- Empty State -->
+        <div class="empty-state" *ngIf="products.length === 0">
+           <div class="empty-icon">📂</div>
+           <h4>Không tìm thấy sản phẩm nào</h4>
+           <p>Hãy thử thay đổi bộ lọc hoặc từ khóa tìm kiếm của bạn.</p>
+           <button class="btn-primary-small" (click)="resetFilters()">Đặt lại bộ lọc</button>
+        </div>
+      </main>
+
     </div>
   </div>
-</section>
+</div>

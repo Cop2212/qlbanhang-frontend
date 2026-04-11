@@ -1,58 +1,52 @@
 <footer class="footer">
-
   <div class="container footer-main">
-
-    <!-- Company -->
+    <!-- Company Info -->
     <div class="footer-col">
-      <h4>{{ setting?.site_name }}</h4>
-
+      <h4>VỀ CHÚNG TÔI</h4>
+      <p style="color: var(--white); font-weight: 700; font-size: 20px; margin-bottom: 20px;">
+        {{ setting?.site_name }}
+      </p>
       <p *ngIf="setting?.address">
-        📍 {{ setting?.address }}
+        <span class="icon">📍</span> {{ setting?.address }}
       </p>
-
       <p *ngIf="setting?.email">
-        ✉ {{ setting?.email }}
+        <span class="icon">✉</span> {{ setting?.email }}
       </p>
-
       <p *ngIf="setting?.phone">
-        📞 {{ setting?.phone }}
+        <span class="icon">📞</span> {{ setting?.phone }}
       </p>
     </div>
 
-    <!-- Links -->
+    <!-- Quick Links -->
     <div class="footer-col">
-      <h4>Liên kết nhanh</h4>
-
+      <h4>LIÊN KẾT NHANH</h4>
       <ul>
         <li><a routerLink="/">Trang chủ</a></li>
         <li><a routerLink="/products">Sản phẩm</a></li>
+        <li><a routerLink="/about">Giới thiệu</a></li>
         <li><a routerLink="/contact">Liên hệ</a></li>
       </ul>
     </div>
 
-    <!-- Social -->
+    <!-- Social Connection -->
     <div class="footer-col">
-      <h4>Kết nối</h4>
-
-      <ul>
-        <li *ngIf="setting?.facebook">
-          <a [href]="setting?.facebook" target="_blank">Facebook</a>
-        </li>
-
-        <li *ngIf="setting?.youtube">
-          <a [href]="setting?.youtube" target="_blank">Youtube</a>
-        </li>
-
-        <li *ngIf="setting?.zalo">
-          <a [href]="setting?.zalo" target="_blank">Zalo</a>
-        </li>
-      </ul>
+      <h4>KẾT NỐI VỚI CHÚNG TÔI</h4>
+      <div class="social-links">
+        <a *ngIf="setting?.facebook" [href]="setting?.facebook" target="_blank" title="Facebook">f</a>
+        <a *ngIf="setting?.youtube" [href]="setting?.youtube" target="_blank" title="Youtube">y</a>
+        <a *ngIf="setting?.zalo" [href]="setting?.zalo" target="_blank" title="Zalo">z</a>
+      </div>
+      <div style="margin-top: 30px;">
+        <p style="font-size: 14px; line-height: 1.4;">
+          Theo dõi chúng tôi để nhận các thông tin khuyến mãi và sản phẩm mới nhất.
+        </p>
+      </div>
     </div>
-
   </div>
 
   <div class="footer-bottom">
-    {{ setting?.footer_text }}
+    <div class="container">
+      {{ setting?.footer_text }} | Built with Premium Design
+    </div>
   </div>
-
 </footer>

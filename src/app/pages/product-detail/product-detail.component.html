@@ -1,349 +1,234 @@
-<section class="product-detail" *ngIf="product">
+<div class="product-detail-page">
+  <div class="container container-content">
+    
+    <!-- Breadcrumb Layer -->
+    <nav class="breadcrumb-nav">
+      <a routerLink="/">Trang chủ</a>
+      <span class="sep">/</span>
+      <a [routerLink]="['/products']" [queryParams]="{category: product?.category_id}">{{ product?.category?.name || 'Sản phẩm' }}</a>
+      <span class="sep">/</span>
+      <span class="current">{{ product?.name }}</span>
+    </nav>
 
-  <div class="container">
-
-    <!-- ===== PRODUCT MAIN ===== -->
-    <div class="product-main">
-
-      <!-- GALLERY -->
-      <div class="product-gallery">
-
-        <div class="main-image-box">
-          <img class="main-image" [src]="mainImage || product.thumbnail">
+    <div class="product-main-grid" *ngIf="product">
+      
+      <!-- LEFT: Image Gallery Advanced -->
+      <div class="gallery-wrapper">
+        <div class="main-display-box" [class.zoom]="isZoomed" (click)="toggleZoom()">
+          <img [src]="mainImage" [alt]="product.name" class="img-fluid">
+          <div class="zoom-hint">🔍 Nhấn để phóng to</div>
         </div>
-
-        <div class="thumbnail-list">
-
-          <img class="thumb" [src]="product.thumbnail" (click)="changeImage(product.thumbnail)">
-
-          <img class="thumb" *ngFor="let img of product.images" [src]="img.image_path"
-            (click)="changeImage(img.image_path)">
-
+        <div class="thumbs-scroller">
+          <div class="thumb-card" [class.active]="mainImage === product.thumbnail" (click)="changeImage(product.thumbnail)">
+            <img [src]="product.thumbnail" alt="thumb">
+          </div>
+          <div class="thumb-card" *ngFor="let img of product.images" 
+               [class.active]="mainImage === img.path" (click)="changeImage(img.path)">
+            <img [src]="img.path" alt="thumb">
+          </div>
         </div>
-
       </div>
 
-      <!-- INFO -->
-      <div class="product-info">
-
-        <h1 class="product-title">{{product.name}}</h1>
-
-        <p class="price">
-          {{product.price | number}} đ
-        </p>
-
-        <div class="product-specs" *ngIf="product.specifications?.length">
-
-          <h3 class="spec-title">Thông số kỹ thuật</h3>
-
-          <div class="spec-wrapper">
-
-            <div class="spec-row" *ngFor="let spec of product.specifications">
-
-              <div class="spec-name">
-                {{ spec.name || spec.template?.name }}
-              </div>
-
-              <div class="spec-value">
-                {{ spec.value }}
-              </div>
-
-            </div>
-
-          </div>
-
+      <!-- RIGHT: Product Vital Info -->
+      <div class="info-summary">
+        <div class="meta-row">
+           <span class="brand-tag">{{ product.brand?.name || 'CHÍNH HÃNG' }}</span>
+           <span class="sku">ID: #{{ product.id }}</span>
+        </div>
+        
+        <h1 class="p-title">{{ product.name }}</h1>
+        
+        <div class="price-section">
+           <div class="price-row">
+              <span class="label">Giá niêm yết:</span>
+              <span class="val-current">{{ product.price | number }} <small>₫</small></span>
+           </div>
+           <div class="stock-status">
+              <span class="status-dot"></span> Đang có hàng sẵn
+           </div>
         </div>
 
-        <button class="btn-primary" (click)="openForm()">
-          Đăng ký nhận liên hệ tư vấn!
-        </button>
+        <div class="short-desc">
+           <p>{{ product.short_description }}</p>
+        </div>
 
+        <div class="trust-badges">
+          <div class="t-badge"><span class="icon">🚚</span> Giao hàng hỏa tốc</div>
+          <div class="t-badge"><span class="icon">🛡️</span> Bảo hành chính hãng</div>
+          <div class="t-badge"><span class="icon">💳</span> Trả góp 0%</div>
+        </div>
+
+        <div class="action-grid">
+           <button class="btn-buy-now" (click)="openForm()">
+              <span class="main-t">NHẬN TƯ VẤN NGAY</span>
+              <span class="sub-t">Chúng tôi sẽ gọi lại cho bạn sau 5 phút</span>
+           </button>
+           <button class="btn-zalo-direct">
+              TƯ VẤN QUA ZALO
+           </button>
+        </div>
+
+        <!-- Affiliate Tooling -->
+        <div class="affiliate-panel" *ngIf="auth.isLoggedIn()">
+           <div class="a-card approved" *ngIf="auth.user()?.profile?.status === 'approved'; else pendingTpl">
+              <div class="a-head">
+                 <span class="a-tag">AFFILIATE TOOL</span>
+                 <h5>Kiếm tiền với sản phẩm này</h5>
+              </div>
+              <p>Chia sẻ link này để nhận hoa hồng khi có đơn hàng thành công.</p>
+              <button class="btn-copy-aff" (click)="copyLink()">
+                 <span class="icon">🔗</span> SAO CHÉP LINK NGAY
+              </button>
+           </div>
+           
+           <ng-template #pendingTpl>
+              <!-- Case: Submitted but Pending -->
+              <div class="a-card pending" *ngIf="auth.user()?.profile?.status === 'pending'; else unsubmittedTpl">
+                 <div class="a-head">
+                    <span class="a-tag warn">CHỜ DUYỆT</span>
+                    <h5>Hồ sơ đang xét duyệt</h5>
+                 </div>
+                 <p>Admin đang kiểm tra thông tin của bạn. Tính năng lấy link sẽ mở sau khi hồ sơ được chấp thuận.</p>
+              </div>
+           </ng-template>
+
+           <ng-template #unsubmittedTpl>
+              <!-- Case: Registered but No Profile/Unsubmitted -->
+              <div class="a-card unsubmitted">
+                 <div class="a-head">
+                    <span class="a-tag error">CHƯA HOÀN THIỆN</span>
+                    <h5>Bắt đầu kiếm tiền ngay</h5>
+                 </div>
+                 <p>Bạn chưa gửi hồ sơ đăng ký đối tác. Vui lòng hoàn thiện hồ sơ tại Dashboard để bắt đầu nhận hoa hồng.</p>
+                 <a routerLink="/trader/dashboard" class="btn-primary-small" style="text-align: center; display: block; width: 100%;">
+                    GỬI HỒ SƠ NGAY
+                 </a>
+              </div>
+           </ng-template>
+        </div>
       </div>
 
     </div>
 
-
-    <!-- ===== DESCRIPTION / REVIEWS ===== -->
-    <div class="product-tabs">
-
-      <div class="tab-header">
-
-        <button [class.active]="activeTab === 'description'" (click)="activeTab = 'description'">
-          Mô tả
+    <!-- Product Middle Tabs -->
+    <div class="detail-tabs-section" *ngIf="product">
+      <div class="tabs-nav-header">
+        <button class="t-nav-item" [class.active]="activeTab === 'description'" (click)="activeTab = 'description'">
+          Mô tả chi tiết
         </button>
-
-        <button [class.active]="activeTab === 'reviews'" (click)="activeTab = 'reviews'">
-          Đánh giá
+        <button class="t-nav-item" [class.active]="activeTab === 'specifications'" (click)="activeTab = 'specifications'">
+          Thông số kỹ thuật
         </button>
-
+        <button class="t-nav-item" [class.active]="activeTab === 'reviews'" (click)="activeTab = 'reviews'">
+          Đánh giá ({{ totalReviews }})
+        </button>
       </div>
 
-      <div class="tab-content">
-
-        <div *ngIf="activeTab === 'description'">
-
-          <h2 class="desc-title">
-            {{ product.short_description }}
-          </h2>
-
-          <div class="description" [innerHTML]="product.description"></div>
-
+      <div class="tab-pane-content">
+        <!-- DESCRIPTION TAB -->
+        <div *ngIf="activeTab === 'description'" class="rich-text-content fade-in">
+          <div [innerHTML]="product.description"></div>
         </div>
 
-        <div *ngIf="activeTab === 'reviews'">
-
-          <div class="rating-summary">
-
-            <div class="rating-score">
-              {{ avgRating }}
-              <span>/5</span>
-            </div>
-
-            <div class="rating-stars">
-              <span *ngFor="let star of [1,2,3,4,5]">
-                {{ star <= avgRating ? '★' : '☆' }} </span>
-            </div>
-
-            <p class="rating-total">
-              {{ totalReviews }} đánh giá
-            </p>
-
-          </div>
-
-          <div class="rating-bars">
-
-            <div class="rating-row" *ngFor="let star of [5,4,3,2,1]">
-
-              <span class="star-label">
-                {{star}}★
-              </span>
-
-              <div class="bar">
-
-                <div class="fill" [style.width.%]="
-           (ratingStats[star] || 0) / totalReviews * 100">
-                </div>
-
-              </div>
-
-              <span class="count">
-                {{ ratingStats[star] || 0 }}
-              </span>
-
-            </div>
-
-          </div>
-
-          <!-- LIST REVIEW -->
-
-          <div class="review-filter">
-
-            <button [class.active]="selectedRating === null" (click)="filterByRating(null)">
-              Tất cả
-            </button>
-
-            <button *ngFor="let star of [5,4,3,2,1]" [class.active]="selectedRating === star"
-              (click)="filterByRating(star)">
-
-              {{star}}★ ({{ ratingStats[star] || 0 }})
-
-            </button>
-
-          </div>
-
-          <div class="reviews-wrapper">
-
-            <!-- LIST REVIEW -->
-            <div class="review-list">
-
-              <div class="review-card" *ngFor="let r of filteredReviews">
-
-                <div class="review-avatar">
-                  {{ r.name.charAt(0) }}
-                </div>
-
-                <div class="review-content">
-
-                  <div class="review-header">
-
-                    <div class="review-user">
-                      <strong class="review-name">
-                        {{ r.name }}
-                      </strong>
-
-                      <div class="review-email">
-                        {{ r.email }}
-                      </div>
-                    </div>
-
-                    <span class="review-date">
-                      {{ r.created_at | date:'dd/MM/yyyy' }}
-                    </span>
-
-                  </div>
-
-                  <div class="review-rating">
-                    <span *ngFor="let star of [1,2,3,4,5]">
-                      {{ star <= r.rating ? '★' : '☆' }} </span>
-                  </div>
-
-                  <p class="review-comment">
-                    {{ r.comment }}
-                  </p>
-
-                </div>
-
-              </div>
-
-            </div>
-
-            <div class="review-pagination">
-
-              <button (click)="loadReviews(currentPage - 1)" [disabled]="currentPage === 1">
-                ←
-              </button>
-
-              <button *ngFor="let p of [].constructor(lastPage); let i = index" (click)="loadReviews(i+1)"
-                [class.active]="currentPage === i+1">
-
-                {{ i+1 }}
-
-              </button>
-
-              <button (click)="loadReviews(currentPage + 1)" [disabled]="currentPage === lastPage">
-                →
-              </button>
-
-            </div>
-
-          </div>
-
-          <!-- REVIEW FORM -->
-          <div class="review-form">
-
-            <h3>Viết đánh giá</h3>
-
-            <form #reviewForm="ngForm" (ngSubmit)="submitReview()" novalidate>
-
-              <div class="form-row">
-                <input type="text" placeholder="Tên của bạn" [(ngModel)]="review.name" name="name" required
-                  #name="ngModel">
-
-                <small class="error" *ngIf="name.invalid && name.touched">
-                  Vui lòng nhập tên
-                </small>
-              </div>
-
-              <div class="form-row">
-                <input type="email" placeholder="Email" [(ngModel)]="review.email" name="email" required
-                  #email="ngModel">
-
-                <small class="error" *ngIf="email.invalid && email.touched">
-                  Email không hợp lệ
-                </small>
-              </div>
-
-              <div class="form-row">
-                <select [(ngModel)]="review.rating" name="rating" required #rating="ngModel">
-
-                  <option value="">Vote</option>
-                  <option value="5">★★★★★ (5)</option>
-                  <option value="4">★★★★ (4)</option>
-                  <option value="3">★★★ (3)</option>
-                  <option value="2">★★ (2)</option>
-                  <option value="1">★ (1)</option>
-
-                </select>
-
-                <small class="error" *ngIf="rating.invalid && rating.touched">
-                  Vui lòng chọn Vote
-                </small>
-              </div>
-
-              <div class="form-row">
-                <textarea placeholder="Nhập đánh giá của bạn" [(ngModel)]="review.comment" name="comment" required>
-                    </textarea>
-              </div>
-
-              <button class="btn-primary" type="submit" [disabled]="reviewForm.invalid">
-                Gửi đánh giá
-              </button>
-
-            </form>
-
-          </div>
-
+        <!-- SPECS TAB -->
+        <div *ngIf="activeTab === 'specifications'" class="specs-pane fade-in">
+           <div class="specs-table-wrapper">
+              <table class="modern-table">
+                 <tbody>
+                    <tr *ngFor="let spec of product.specifications">
+                       <td class="t-label">{{ spec.template?.name }}</td>
+                       <td class="t-value">{{ spec.value }}</td>
+                    </tr>
+                 </tbody>
+              </table>
+           </div>
         </div>
 
+        <!-- REVIEWS TAB -->
+        <div *ngIf="activeTab === 'reviews'" class="reviews-pane fade-in">
+          
+          <!-- Review Form for Guests -->
+          <div class="submit-review-box">
+             <h4>Viết đánh giá của bạn</h4>
+             <p>Chia sẻ trải nghiệm của bạn về sản phẩm này với mọi người.</p>
+             <form (ngSubmit)="submitReview()" class="review-form">
+                <div class="r-form-row-triple">
+                   <div class="r-group">
+                      <label>Họ tên *</label>
+                      <input type="text" placeholder="Anh Tuấn" [(ngModel)]="review.name" name="rev_name" required>
+                   </div>
+                   <div class="r-group">
+                      <label>Email liên hệ *</label>
+                      <input type="email" placeholder="email@example.com" [(ngModel)]="review.email" name="rev_email" required>
+                   </div>
+                   <div class="r-group">
+                      <label>Đánh giá sao *</label>
+                      <select [(ngModel)]="review.rating" name="rev_rating" required>
+                         <option value="5">⭐⭐⭐⭐⭐</option>
+                         <option value="4">⭐⭐⭐⭐</option>
+                         <option value="3">⭐⭐⭐</option>
+                         <option value="2">⭐⭐</option>
+                         <option value="1">⭐</option>
+                      </select>
+                   </div>
+                </div>
+                <div class="r-group">
+                   <label>Nội dung nhận xét *</label>
+                   <textarea rows="3" placeholder="Sản phẩm rất tốt..." [(ngModel)]="review.comment" name="rev_msg" required></textarea>
+                </div>
+                <button type="submit" class="btn-submit-review">GỬI ĐÁNH GIÁ NGAY</button>
+             </form>
+          </div>
+
+          <div class="review-divider"></div>
+
+          <div class="review-empty" *ngIf="filteredReviews.length === 0">
+             Chưa có đánh giá nào cho sản phẩm này. Hãy là người đầu tiên đánh giá!
+          </div>
+          <div class="review-list">
+            <div *ngFor="let rev of filteredReviews" class="review-card">
+              <div class="r-head">
+                 <div class="r-user">
+                    <strong>{{ rev.name }}</strong>
+                    <div class="r-email">{{ rev.email }}</div>
+                    <span class="r-date">Vừa mới đánh giá</span>
+                 </div>
+                 <div class="r-stars">{{ '⭐'.repeat(rev.rating || 5) }}</div>
+              </div>
+              <p class="r-msg">{{ rev.comment }}</p>
+            </div>
+          </div>
+        </div>
       </div>
-
     </div>
-
-
-    <!-- ===== SIMILAR PRODUCTS ===== -->
-    <section class="products similar-products">
-
-      <h2 class="section-title">
-        Sản phẩm tương tự
-      </h2>
-
-      <div class="product-grid">
-
-        <div class="product-card" *ngFor="let item of similarProducts">
-
-          <a [routerLink]="['/product', item.slug]" class="card-image">
-            <img [src]="item.thumbnail" alt="">
-          </a>
-
-          <div class="card-body">
-
-            <h3 class="card-title">
-              <a [routerLink]="['/product', item.slug]">
-                {{ item.name }}
-              </a>
-            </h3>
-
-            <p class="card-price">
-              {{ item.price | number }} đ
-            </p>
-
-            <a class="btn-secondary" [routerLink]="['/product', item.slug]">
-              Xem chi tiết
-            </a>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
 
   </div>
+</div>
 
-</section>
-
-<div class="modal" *ngIf="showForm">
-
-  <div class="modal-overlay" (click)="closeForm()"></div>
-
-  <div class="modal-content">
-
-    <h3>Đăng ký tư vấn</h3>
-
-    <form (ngSubmit)="submitConsultation()">
-
-      <input placeholder="Họ tên" [(ngModel)]="consult.name" name="name" required>
-      <input placeholder="SĐT" [(ngModel)]="consult.phone" name="phone" required>
-      <input placeholder="Email" [(ngModel)]="consult.email" name="email">
-
-      <textarea placeholder="Nội dung" [(ngModel)]="consult.message" name="message"></textarea>
-
-      <button type="submit">Gửi</button>
-      <button type="button" (click)="closeForm()">Đóng</button>
-
+<!-- Modal Form Consultation -->
+<div class="luxury-modal" [class.open]="showForm" (click)="closeForm()">
+  <div class="m-dialog" (click)="$event.stopPropagation()">
+    <button class="m-close" (click)="closeForm()">×</button>
+    <div class="m-header">
+       <h3>Đăng ký tư vấn</h3>
+       <p>Để lại thông tin, chuyên viên sẽ liên hệ hỗ trợ bạn sớm nhất.</p>
+    </div>
+    <form #f="ngForm" (ngSubmit)="submitConsultation()" class="m-form">
+      <div class="m-group">
+         <label>Họ tên khách hàng</label>
+         <input type="text" placeholder="Nguyễn Văn A" name="name" [(ngModel)]="consult.name" required>
+      </div>
+      <div class="m-group">
+         <label>Số điện thoại liên hệ</label>
+         <input type="text" placeholder="0xxx xxx xxx" name="phone" [(ngModel)]="consult.phone" required>
+      </div>
+      <div class="m-group">
+         <label>Nội dung câu hỏi</label>
+         <textarea rows="3" placeholder="Ghi chú thêm nếu bạn có yêu cầu đặc biệt..." name="message" [(ngModel)]="consult.message"></textarea>
+      </div>
+      <button class="m-btn-submit" type="submit" [disabled]="f.invalid">
+        XÁC NHẬN GỬI THÔNG TIN
+      </button>
     </form>
-
   </div>
-
 </div>

@@ -1,59 +1,74 @@
 <div class="about-page">
-
+  
+  <!-- Breadcrumb & Soft Header -->
+  <div class="page-header-minimal">
     <div class="container">
+      <nav class="breadcrumb">
+        <a routerLink="/">Trang chủ</a> <span>/</span> <span class="current">Giới thiệu</span>
+      </nav>
+      <h1 class="minimal-title">Giới thiệu</h1>
+      <div class="title-line"></div>
+    </div>
+    <!-- Decorative background elements -->
+    <div class="decor-circle circle-1"></div>
+    <div class="decor-circle circle-2"></div>
+  </div>
 
-        <!-- ===== LOGO ===== -->
-        <div class="about-logo">
-            <img *ngIf="setting?.logo" [src]="setting?.logo" alt="logo">
-        </div>
-
-
-        <!-- ===== GIỚI THIỆU CÔNG TY ===== -->
-        <section class="about-intro">
-
-            <h1 class="about-title">
-                {{ company?.title }}
-            </h1>
-
-            <div class="about-content" [innerHTML]="company?.content">
+  <div class="container container-content">
+    
+    <!-- Intro Section -->
+    <div class="intro-grid">
+      <div class="intro-text">
+         <div class="badge-modern">Câu chuyện thương hiệu</div>
+         <h2 class="h2-modern">{{ company?.title }}</h2>
+         <div class="content-body" [innerHTML]="company?.content"></div>
+      </div>
+      <div class="intro-image-container">
+         <div class="image-stack">
+            <img *ngIf="setting?.logo" [src]="setting?.logo" alt="Logo" class="img-main">
+            <div class="image-accent-box">
+               <span class="year">{{ company?.established_year }}</span>
+               <span class="text">Thành lập</span>
             </div>
-
-        </section>
-
-
-        <!-- ===== THÔNG TIN DOANH NGHIỆP ===== -->
-        <section class="company-info-section">
-
-            <h2 class="section-title">
-                Thông tin doanh nghiệp
-            </h2>
-
-            <div class="company-card">
-
-                <div class="info-row">
-                    <span class="label">Tên công ty</span>
-                    <span class="value">{{ company?.name }}</span>
-                </div>
-
-                <div class="info-row">
-                    <span class="label">Mã số thuế</span>
-                    <span class="value">{{ company?.tax_code }}</span>
-                </div>
-
-                <div class="info-row">
-                    <span class="label">Người đại diện</span>
-                    <span class="value">{{ company?.representative }}</span>
-                </div>
-
-                <div class="info-row">
-                    <span class="label">Năm thành lập</span>
-                    <span class="value">{{ company?.established_year }}</span>
-                </div>
-
-            </div>
-
-        </section>
-
+         </div>
+      </div>
     </div>
 
+    <!-- Values Section (Refined) -->
+    <div class="values-wrapper">
+      <div class="text-center mb-5">
+         <h5 class="subtitle">GIÁ TRỊ CỦA CHÚNG TÔI</h5>
+         <h2 class="h2-modern">Kim chỉ nam hành động</h2>
+      </div>
+      <div class="values-flex">
+        <div class="value-card">
+          <div class="v-icon-box">🤝</div>
+          <h4>Uy tín</h4>
+          <p>Luôn giữ đúng lời hứa với khách hàng trong mọi giao dịch.</p>
+        </div>
+        <div class="value-card">
+          <div class="v-icon-box">🚀</div>
+          <h4>Đổi mới</h4>
+          <p>Cập nhật xu hướng và công nghệ mới mỗi ngày.</p>
+        </div>
+        <div class="value-card">
+          <div class="v-icon-box">💖</div>
+          <h4>Tận tâm</h4>
+          <p>Chăm sóc từng nhu cầu nhỏ nhất của bạn.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Legal Area (Compact) -->
+    <div class="legal-box-compact">
+      <h2 class="h2-modern text-center mb-4">Chứng nhận doanh nghiệp</h2>
+      <div class="legal-grid">
+        <div class="legal-item"><strong>CÔNG TY:</strong> {{ company?.name }}</div>
+        <div class="legal-item"><strong>MST:</strong> {{ company?.tax_code }}</div>
+        <div class="legal-item"><strong>NGƯỜI ĐẠI DIỆN:</strong> {{ company?.representative }}</div>
+        <div class="legal-item"><strong>NĂM:</strong> {{ company?.established_year }}</div>
+      </div>
+    </div>
+
+  </div>
 </div>

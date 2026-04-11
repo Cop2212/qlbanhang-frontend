@@ -1,81 +1,84 @@
-<!-- ===== BANNER ===== -->
+<!-- ===== BANNER SECTION ===== -->
 <section class="hero">
-
   <div class="hero-slider" [style.transform]="'translateX(-' + currentSlide * 100 + '%)'">
-
     <div class="hero-slide" *ngFor="let slider of sliders">
-
-      <img [src]="slider.image" class="hero-bg">
-
+      <img [src]="slider.image" class="hero-bg" alt="banner">
       <div class="hero-overlay"></div>
-
       <div class="hero-content">
         <div class="container hero-inner">
-
           <h1>{{ slider.title }}</h1>
-
           <div class="hero-buttons">
-            <a routerLink="/products" class="btn-primary">
-              Xem sản phẩm
+            <a routerLink="/products" class="btn btn-primary">
+              KHÁM PHÁ NGAY
             </a>
-
-            <a routerLink="/lien-he" class="btn-outline">
-              Tư vấn ngay
+            <a routerLink="/contact" class="btn btn-outline" style="border-color: white; color: white;">
+              TƯ VẤN MIỄN PHÍ
             </a>
           </div>
-
         </div>
       </div>
     </div>
-
   </div>
 
-  <!-- Nút điều hướng -->
   <button class="nav prev" (click)="prevSlide()">❮</button>
   <button class="nav next" (click)="nextSlide()">❯</button>
 
-  <!-- Dots -->
   <div class="hero-dots">
-
     <span *ngFor="let s of sliders; let i = index" [class.active]="i === currentSlide" (click)="goToSlide(i)">
     </span>
-
   </div>
-
 </section>
 
-<!-- ===== PRODUCT SECTION ===== -->
+<!-- ===== FEATURES SECTION ===== -->
+<section class="features">
+  <div class="container feature-grid">
+    <div class="feature-item">
+      <div class="f-icon">🚚</div>
+      <div class="f-text">
+        <h4>Vận chuyển nhanh</h4>
+        <p>Giao hàng nhanh toàn quốc</p>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="f-icon">🛡️</div>
+      <div class="f-text">
+        <h4>Bảo hành uy tín</h4>
+        <p>Cam kết 100% chính hãng</p>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="f-icon">🎧</div>
+      <div class="f-text">
+        <h4>Tư vấn 24/7</h4>
+        <p>Hỗ trợ trực tuyến tận tâm</p>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="f-icon">💸</div>
+      <div class="f-text">
+        <h4>Giá cả cạnh tranh</h4>
+        <p>Ưu đãi tốt nhất thị trường</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FEATURED PRODUCTS ===== -->
 <section class="products">
   <div class="container">
-
-    <h2 class="section-title">Sản phẩm nổi bật</h2>
-
+    <h2 class="section-title">SẢN PHẨM NỔI BẬT</h2>
     <div class="product-grid">
-
       <div class="product-card" *ngFor="let item of featuredProducts">
-
         <div class="product-image">
           <img [src]="item.thumbnail" alt="product">
         </div>
-
         <h3>{{ item.name }}</h3>
-
-        <p class="product-color" *ngIf="item.color">
-          Màu: {{ item.color }}
-        </p>
-
-        <p class="price">
-          {{ item.price | number }} vnđ
-        </p>
-
-        <a class="btn-secondary" [routerLink]="['/product', item.slug]">
-          Xem chi tiết
+        <p class="price">{{ item.price | number }} <small>VNĐ</small></p>
+        <a class="btn btn-primary" style="width: 100%;" [routerLink]="['/product', item.slug]">
+          CHI TIẾT
         </a>
-
       </div>
-
     </div>
-
   </div>
 </section>
 
@@ -84,38 +87,42 @@
   <div class="container">
     <div class="consult-wrapper">
       <div class="consult-left">
-        <h2>Đăng ký tư vấn miễn phí</h2>
-        <p>Để lại thông tin để chúng tôi hỗ trợ bạn nhanh nhất.</p>
+        <h2>BẠN CẦN TƯ VẤN?</h2>
+        <p style="font-size: 18px; opacity: 0.8; margin-bottom: 30px;">
+          Đội ngũ chuyên gia của chúng tôi luôn sẵn sàng hỗ trợ bạn tìm kiếm giải pháp tối ưu nhất cho nhu cầu của mình.
+        </p>
+        <ul style="display: grid; gap: 15px;">
+          <li>✅ Tư vấn chuyên sâu 24/7</li>
+          <li>✅ Cam kết chất lượng dịch vụ</li>
+          <li>✅ Hỗ trợ kỹ thuật tận nơi</li>
+        </ul>
       </div>
 
       <div class="consult-right">
         <form #f="ngForm" (ngSubmit)="submitForm()">
-
-          <input type="text" placeholder="Họ và tên" [(ngModel)]="form.name" name="name" required>
-
-          <!-- PHONE -->
-          <input type="text" placeholder="Số điện thoại" [(ngModel)]="form.phone" name="phone" required
-            pattern="^(0|\+84)(3|5|7|8|9)[0-9]{8}$" #phone="ngModel">
-
-          <div *ngIf="phone.invalid && phone.touched" class="text-danger small">
-            <span *ngIf="phone.errors?.['required']">Vui lòng nhập số điện thoại.</span>
-            <span *ngIf="phone.errors?.['pattern']">Số điện thoại không hợp lệ.</span>
+          <h3 style="margin-bottom: 25px; text-align: center;">Đăng ký thông tin</h3>
+          
+          <div class="form-group">
+            <input type="text" placeholder="Họ và tên" [(ngModel)]="form.name" name="name" required>
           </div>
 
-          <!-- EMAIL -->
-          <input type="email" placeholder="Email" [(ngModel)]="form.email" name="email" required email #email="ngModel">
-
-          <div *ngIf="email.invalid && email.touched" class="text-danger small">
-            <span *ngIf="email.errors?.['required']">Vui lòng nhập email.</span>
-            <span *ngIf="email.errors?.['email']">Email không đúng định dạng.</span>
+          <div class="form-group">
+            <input type="text" placeholder="Số điện thoại" [(ngModel)]="form.phone" name="phone" required
+              pattern="^(0|\+84)(3|5|7|8|9)[0-9]{8}$" #phone="ngModel">
+            <div *ngIf="phone.invalid && phone.touched" class="text-danger small">
+              Số điện thoại không hợp lệ.
+            </div>
           </div>
 
-          <textarea rows="4" placeholder="Nội dung tư vấn" [(ngModel)]="form.message" name="message"></textarea>
+          <div class="form-group">
+            <input type="email" placeholder="Email" [(ngModel)]="form.email" name="email" required email #email="ngModel">
+          </div>
 
-          <button class="btn-primary" type="submit" [disabled]="f.invalid">
-            Gửi thông tin
+          <textarea rows="3" placeholder="Yêu cầu của bạn" [(ngModel)]="form.message" name="message"></textarea>
+
+          <button class="btn btn-primary" type="submit" [disabled]="f.invalid" style="width: 100%; padding: 15px;">
+            GỬI YÊU CẦU NGAY
           </button>
-
         </form>
       </div>
     </div>

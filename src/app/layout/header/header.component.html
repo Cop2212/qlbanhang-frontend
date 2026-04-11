@@ -1,30 +1,33 @@
 <header class="header">
     <div class="container header-top">
+        <!-- Mobile Menu Toggle -->
+        <button class="menu-toggle" (click)="toggleMenu()">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
 
         <!-- Logo -->
         <div class="logo">
             <a routerLink="/">
-                <img *ngIf="setting?.logo" [src]="setting?.logo" alt="logo">
+                <img *ngIf="setting?.logo" [src]="setting?.logo" alt="logo" style="width: auto; height: 45px;">
                 <span class="brand" *ngIf="!setting?.logo">
                     {{ setting?.site_name }}
                 </span>
             </a>
         </div>
 
-        <!-- Menu -->
-        <nav class="nav">
+        <!-- Desktop Menu -->
+        <nav class="nav desktop-only">
             <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
                 Trang chủ
             </a>
-
             <a routerLink="/products" routerLinkActive="active">
                 Sản phẩm
             </a>
-
             <a routerLink="/about" routerLinkActive="active">
                 Giới thiệu
             </a>
-
             <a routerLink="/contact" routerLinkActive="active">
                 Liên hệ
             </a>
@@ -32,28 +35,46 @@
 
         <!-- Right -->
         <div class="header-right">
-
-            <!-- Cart -->
-            
+            <!-- Chat (Desktop) -->
+            <div class="header-chat desktop-only me-3">
+                <a href="javascript:void(0)" (click)="openChat()" class="btn-chat">
+                     🗨️ Chat ngay
+                </a>
+            </div>
 
             <!-- Hotline -->
             <div class="hotline">
                 <span class="hotline-icon">📞</span>
-
                 <div class="hotline-info">
-
                     <span class="label">Hotline</span>
-
                     <a class="phone" [href]="phoneLink" target="_blank">
-
                         {{ setting?.phone }}
-
                     </a>
-
                 </div>
             </div>
-
         </div>
+    </div>
 
+    <!-- Mobile Navigation Drawer -->
+    <div class="mobile-menu-overlay" [class.open]="isMenuOpen" (click)="toggleMenu()">
+        <nav class="mobile-nav" (click)="$event.stopPropagation()">
+            <div class="mobile-nav-header">
+                <span class="brand">{{ setting?.site_name }}</span>
+                <button class="close-btn" (click)="toggleMenu()">×</button>
+            </div>
+            <div class="mobile-nav-links">
+                <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="toggleMenu()">Trang chủ</a>
+                <a routerLink="/products" routerLinkActive="active" (click)="toggleMenu()">Sản phẩm</a>
+                <a routerLink="/about" routerLinkActive="active" (click)="toggleMenu()">Giới thiệu</a>
+                <a routerLink="/contact" routerLinkActive="active" (click)="toggleMenu()">Liên hệ</a>
+                
+                <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
+                
+                <a href="javascript:void(0)" (click)="openChat(); toggleMenu()" class="mobile-chat-link" 
+                   style="color: var(--primary); font-weight: 700;">
+                    🗨️ Hỗ trợ Chat trực tuyến
+                </a>
+            </div>
+        </nav>
     </div>
 </header>

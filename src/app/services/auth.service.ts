@@ -62,6 +62,8 @@ export class AuthService {
     }
 
     autoLogin() {
+        if (this.authChecked) return of(this.isLoggedIn());
+
         return this.http.post<any>(
             `${environment.apiUrl}/trader/refresh`,
             {},

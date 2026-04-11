@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { TraderService } from '../../services/trader.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -17,7 +18,7 @@ import { TraderService } from '../../services/trader.service';
 })
 export class ProductDetailComponent implements OnInit {
 
-  activeTab: 'description' | 'reviews' = 'description';
+  activeTab: 'description' | 'reviews' | 'specifications' = 'description';
 
   product: any;
   similarProducts: any[] = [];
@@ -45,13 +46,15 @@ export class ProductDetailComponent implements OnInit {
 
   showForm = false;
   consult: any = {};
+  isZoomed: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
     private reviewService: ReviewService,
     private http: HttpClient,
-    private traderService: TraderService
+    private traderService: TraderService,
+    public auth: AuthService
   ) { }
 
   ngOnInit() {
@@ -83,6 +86,11 @@ export class ProductDetailComponent implements OnInit {
 
   changeImage(img: string) {
     this.mainImage = img;
+    this.isZoomed = false;
+  }
+
+  toggleZoom() {
+    this.isZoomed = !this.isZoomed;
   }
 
   loadReviews(page: number = 1) {
@@ -121,35 +129,51 @@ export class ProductDetailComponent implements OnInit {
   }
 
   submitReview() {
+    // Validate Email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(this.review.email)) {
+      alert("Vui lòng nhập định dạng Email hợp lệ!");
+      return;
+    }
 
     this.review.product_id = this.product.id;
 
     this.reviewService
       .createReview(this.review)
       .subscribe({
-
         next: (res: any) => {
+          alert("Gửi đánh giá thành công! Dữ liệu của bạn đã được ghi nhận.");
 
-          alert("Đánh giá đã gửi");
+          // Thêm vào danh sách hiển thị (bao gồm cả email)
+          const newReview = {
+            name: this.review.name,
+            email: this.review.email,
+            rating: Number(this.review.rating),
+            comment: this.review.comment
+          };
+          
+          // Kiểm tra nếu email này đã đánh giá rồi thì thay thế cái cũ trong list hiện tại
+          const index = this.filteredReviews.findIndex(r => r.email === this.review.email);
+          if (index !== -1) {
+            this.filteredReviews[index] = newReview;
+          } else {
+            this.filteredReviews = [newReview, ...this.filteredReviews];
+            this.totalReviews++;
+          }
 
+          // Reset form
           this.review = {
             product_id: 0,
             name: '',
             email: '',
-            rating: '',
+            rating: '5',
             comment: ''
           };
-
         },
-
         error: (err) => {
-
-          alert(err.error.message);
-
+          alert(err.error?.message || "Lỗi khi gửi đánh giá.");
         }
-
       });
-
   }
 
   openForm() {
@@ -179,6 +203,24 @@ export class ProductDetailComponent implements OnInit {
         alert('Đã gửi!');
         this.closeForm();
       });
+  }
+
+  copyLink() {
+    if (!this.product?.id) return;
+
+    this.traderService.generateLink(this.product.id).subscribe({
+      next: (res: any) => {
+        if (res.link) {
+          navigator.clipboard.writeText(res.link).then(() => {
+            alert("Đã sao chép link Affiliate!");
+          });
+        }
+      },
+      error: (err) => {
+        console.error('Lỗi khi lấy link:', err);
+        alert("Không thể lấy link Affiliate lúc này.");
+      }
+    });
   }
 
 }
