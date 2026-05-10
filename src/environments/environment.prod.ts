@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    apiUrl: 'https://qlbanhang-backend.onrender.com/api'
+    apiUrl: 'https://api.gomab.vn/api'
 };

@@ -35,8 +35,16 @@
 .footer-col p {
     margin-bottom: 15px;
     display: flex;
-    align-items: center;
-    gap: 10px;
+    align-items: flex-start;
+    gap: 12px;
+    line-height: 1.5;
+}
+
+.footer-col .icon {
+    color: var(--primary);
+    width: 20px;
+    margin-top: 4px;
+    text-align: center;
 }
 
 .footer-col ul li {
@@ -55,20 +63,39 @@
 }
 
 .social-links a {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     background: #374151;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 50%;
+    border-radius: 12px; /* Slightly rounded corners for a modern look */
     color: var(--white);
-    font-size: 18px;
+    font-size: 20px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
 }
 
 .social-links a:hover {
-    background: var(--primary);
-    transform: translateY(-3px);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+}
+
+.social-links a.facebook:hover {
+    background: #1877F2;
+}
+
+.social-links a.youtube:hover {
+    background: #FF0000;
+}
+
+.social-links a.zalo:hover {
+    background: #0068FF;
+}
+
+.zalo-icon {
+    font-weight: 900;
+    font-family: 'Inter', sans-serif;
 }
 
 .footer-bottom {

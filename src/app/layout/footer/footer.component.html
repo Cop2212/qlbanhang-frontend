@@ -7,13 +7,13 @@
         {{ setting?.site_name }}
       </p>
       <p *ngIf="setting?.address">
-        <span class="icon">📍</span> {{ setting?.address }}
+        <i class="fas fa-map-marker-alt icon"></i> {{ setting?.address }}
       </p>
       <p *ngIf="setting?.email">
-        <span class="icon">✉</span> {{ setting?.email }}
+        <i class="fas fa-envelope icon"></i> {{ setting?.email }}
       </p>
       <p *ngIf="setting?.phone">
-        <span class="icon">📞</span> {{ setting?.phone }}
+        <i class="fas fa-phone-alt icon"></i> {{ setting?.phone }}
       </p>
     </div>
 
@@ -32,9 +32,15 @@
     <div class="footer-col">
       <h4>KẾT NỐI VỚI CHÚNG TÔI</h4>
       <div class="social-links">
-        <a *ngIf="setting?.facebook" [href]="setting?.facebook" target="_blank" title="Facebook">f</a>
-        <a *ngIf="setting?.youtube" [href]="setting?.youtube" target="_blank" title="Youtube">y</a>
-        <a *ngIf="setting?.zalo" [href]="setting?.zalo" target="_blank" title="Zalo">z</a>
+        <a *ngIf="setting?.facebook" [href]="setting?.facebook" target="_blank" title="Facebook" class="facebook">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+        <a *ngIf="setting?.youtube" [href]="setting?.youtube" target="_blank" title="Youtube" class="youtube">
+          <i class="fab fa-youtube"></i>
+        </a>
+        <a *ngIf="setting?.zalo" [href]="getZaloLink()" target="_blank" title="Zalo" class="zalo">
+          <span class="zalo-icon">Z</span>
+        </a>
       </div>
       <div style="margin-top: 30px;">
         <p style="font-size: 14px; line-height: 1.4;">

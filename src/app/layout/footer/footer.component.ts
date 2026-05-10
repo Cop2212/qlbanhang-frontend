@@ -23,4 +23,12 @@ export class FooterComponent implements OnInit {
     });
   }
 
+  getZaloLink(): string {
+    if (!this.setting?.zalo) return '';
+    const link = this.setting.zalo.trim();
+    if (link.startsWith('http')) return link;
+    // Nếu chỉ là số điện thoại, thêm tiền tố zalo.me
+    return `https://zalo.me/${link.replace(/\s+/g, '')}`;
+  }
+
 }
