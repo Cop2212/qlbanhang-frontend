@@ -52,14 +52,29 @@
         </div>
 
         <!-- Bán chạy (List) -->
-        <div class="compact-filter best-sellers-aside" *ngIf="bestSellers.length > 0">
+        <div class="compact-filter best-sellers-aside" *ngIf="bestSellers.length > 0 || isLoadingBestSellers">
           <h5><span class="f-icon">🔥</span> BÁN CHẠY</h5>
-          <div class="bs-mini-list">
+          <div class="bs-mini-list" *ngIf="!isLoadingBestSellers">
              <div class="bs-mini-item" *ngFor="let item of bestSellers" [routerLink]="['/product', item.slug]">
                 <img [src]="item.thumbnail" alt="p">
+                 <div class="bs-mini-info">
+                    <div class="bs-mini-name">{{ item.name }}</div>
+                    <div class="bs-mini-meta">
+                       <span class="bs-mini-price">{{ item.price | number }}đ</span>
+                       <span class="mini-badge-tag featured" *ngIf="item.is_featured || item.featured">Hot</span>
+                       <span class="mini-badge-tag best-seller" *ngIf="item.is_best_seller || item.best_seller">Top</span>
+                    </div>
+                 </div>
+             </div>
+          </div>
+
+          <!-- Skeleton Mini List -->
+          <div class="bs-mini-list" *ngIf="isLoadingBestSellers">
+             <div class="bs-mini-item skeleton" *ngFor="let i of [1,2,3,4,5]">
+                <div class="skeleton-img skeleton-shimmer"></div>
                 <div class="bs-mini-info">
-                   <div class="bs-mini-name">{{ item.name }}</div>
-                   <div class="bs-mini-price">{{ item.price | number }}đ</div>
+                   <div class="skeleton-line sm title"></div>
+                   <div class="skeleton-line sm price"></div>
                 </div>
              </div>
           </div>
@@ -68,18 +83,22 @@
 
       <!-- Trung tâm: HIỂN THỊ SẢN PHẨM -->
       <main class="products-main-content">
-        <div class="product-grid-compact">
+        <div class="product-grid-compact" *ngIf="!isLoadingProducts">
            <div class="compact-card" *ngFor="let item of products">
               <div class="card-img-box" [routerLink]="['/product', item.slug]">
                  <img [src]="item.thumbnail" alt="p">
-                 <div class="card-badge" *ngIf="item.is_new">NEW</div>
+                 <div class="card-badge-container">
+                    <div class="card-badge new" *ngIf="item.is_new || item.new">NEW</div>
+                    <div class="card-badge featured" *ngIf="item.is_featured || item.featured">🔥 NỔI BẬT</div>
+                    <div class="card-badge best-seller" *ngIf="item.is_best_seller || item.best_seller">⭐ BÁN CHẠY</div>
+                 </div>
               </div>
               <div class="card-body-compact">
                  <div class="card-brand">{{ item.brand?.name || 'CHẤT LƯỢNG CAO' }}</div>
                  <h3 class="card-title" [routerLink]="['/product', item.slug]">{{ item.name }}</h3>
                  <div class="card-price-row">
                     <span class="p-new">{{ item.price | number }}đ</span>
-                    <span class="p-old">{{ (item.price * 1.1) | number }}đ</span>
+                    <span class="p-old">{{ (item.price * 1.3) | number }}đ</span>
                  </div>
                  <div class="card-footer-modern">
                     <button (click)="openZalo(item)" class="btn-chat-modern">
@@ -93,8 +112,24 @@
            </div>
         </div>
 
+        <!-- Skeleton Loading Grid -->
+        <div class="product-grid-compact" *ngIf="isLoadingProducts">
+           <div class="compact-card skeleton" *ngFor="let i of [1,2,3,4,5,6,7,8]">
+              <div class="card-img-box skeleton-shimmer"></div>
+              <div class="card-body-compact">
+                 <div class="skeleton-line brand"></div>
+                 <div class="skeleton-line title"></div>
+                 <div class="skeleton-line price"></div>
+                 <div class="card-footer-modern">
+                    <div class="skeleton-btn"></div>
+                    <div class="skeleton-btn"></div>
+                 </div>
+              </div>
+           </div>
+        </div>
+
         <!-- Pagination -->
-        <div class="compact-pagination" *ngIf="lastPage > 1">
+        <div class="compact-pagination" *ngIf="lastPage > 1 && !isLoadingProducts">
            <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1" class="page-nav">❮</button>
            <span class="page-info">Trang <b>{{ currentPage }}</b> trên {{ lastPage }}</span>
            <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === lastPage" class="page-nav">❯</button>

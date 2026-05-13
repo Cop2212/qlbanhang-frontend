@@ -8,11 +8,14 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { TraderService } from '../../services/trader.service';
 import { AuthService } from '../../services/auth.service';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { SettingService } from '../../services/setting.service';
+import { Setting } from '../../models/setting';
 
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, ReactiveFormsModule],
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.scss']
 })
@@ -22,6 +25,7 @@ export class ProductDetailComponent implements OnInit {
 
   product: any;
   similarProducts: any[] = [];
+  setting?: Setting;
 
   avgRating = 0;
   totalReviews = 0;
@@ -45,8 +49,11 @@ export class ProductDetailComponent implements OnInit {
   mainImage: string = '';
 
   showForm = false;
-  consult: any = {};
   isZoomed: boolean = false;
+  isLoading: boolean = true;
+  isSubmitting: boolean = false;
+
+  consultationForm: FormGroup;
 
   constructor(
     private route: ActivatedRoute,
@@ -54,10 +61,22 @@ export class ProductDetailComponent implements OnInit {
     private reviewService: ReviewService,
     private http: HttpClient,
     private traderService: TraderService,
+    private fb: FormBuilder,
+    private settingService: SettingService,
     public auth: AuthService
-  ) { }
+  ) {
+    this.consultationForm = this.fb.group({
+      name: ['', [Validators.required, Validators.minLength(2)]],
+      phone: ['', [Validators.required, Validators.pattern(/^(03|05|07|08|09)\d{8}$/)]],
+      email: ['', [Validators.email]],
+      message: ['', [Validators.required, Validators.minLength(2)]]
+    });
+  }
 
   ngOnInit() {
+    this.settingService.getSetting().subscribe(res => {
+      this.setting = res;
+    });
 
     this.route.queryParams.subscribe(params => {
       if (params['ref']) {
@@ -69,28 +88,45 @@ export class ProductDetailComponent implements OnInit {
       const slug = params.get('slug');
 
       if (slug) {
+        this.isLoading = true;
         this.productService.getProductDetail(slug)
-          .subscribe(res => {
-
-            this.product = res.product;
-            this.similarProducts = res.similar_products;
-
-            this.mainImage = this.product.thumbnail;
-
-            this.loadReviews();
-            window.scrollTo(0, 0);
+          .subscribe({
+            next: (res) => {
+              this.product = res.product;
+              this.similarProducts = res.similar_products;
+              this.mainImage = this.product.thumbnail;
+              this.loadReviews();
+              this.isLoading = false;
+              window.scrollTo(0, 0);
+            },
+            error: () => {
+              this.isLoading = false;
+            }
           });
       }
     });
   }
+
+  zoomOrigin = 'center center';
 
   changeImage(img: string) {
     this.mainImage = img;
     this.isZoomed = false;
   }
 
-  toggleZoom() {
+  toggleZoom(e: MouseEvent) {
     this.isZoomed = !this.isZoomed;
+    if (this.isZoomed) {
+      this.updateZoomOrigin(e);
+    }
+  }
+
+  private updateZoomOrigin(e: MouseEvent) {
+    const container = e.currentTarget as HTMLElement;
+    const { left, top, width, height } = container.getBoundingClientRect();
+    const x = ((e.clientX - left) / width) * 100;
+    const y = ((e.clientY - top) / height) * 100;
+    this.zoomOrigin = `${x}% ${y}%`;
   }
 
   loadReviews(page: number = 1) {
@@ -149,7 +185,8 @@ export class ProductDetailComponent implements OnInit {
             name: this.review.name,
             email: this.review.email,
             rating: Number(this.review.rating),
-            comment: this.review.comment
+            comment: this.review.comment,
+            created_at: new Date()
           };
           
           // Kiểm tra nếu email này đã đánh giá rồi thì thay thế cái cũ trong list hiện tại
@@ -185,24 +222,34 @@ export class ProductDetailComponent implements OnInit {
   }
 
   submitConsultation() {
+    if (this.consultationForm.valid && !this.isSubmitting) {
+      this.isSubmitting = true;
 
-    const ref = localStorage.getItem('ref_code');
-    const traderId = localStorage.getItem('trader_id');
+      const ref = localStorage.getItem('ref_code');
+      const traderId = localStorage.getItem('trader_id');
 
-    const data = {
-      ...this.consult,
-      product_id: this.product.id,
-      trader_id: traderId,
-      ref_code: ref
-    };
+      const data = {
+        ...this.consultationForm.value,
+        product_id: this.product.id,
+        trader_id: traderId,
+        ref_code: ref
+      };
 
-    console.log('CONSULT DATA:', data);
-
-    this.http.post(`${environment.apiUrl}/consultations`, data)
-      .subscribe(() => {
-        alert('Đã gửi!');
-        this.closeForm();
-      });
+      this.http.post(`${environment.apiUrl}/consultations`, data)
+        .subscribe({
+          next: () => {
+            alert('Cảm ơn bạn! Yêu cầu hỗ trợ của bạn đã được gửi. Chuyên viên sẽ liên hệ lại sớm nhất.');
+            this.consultationForm.reset();
+            this.isSubmitting = false;
+            this.closeForm();
+          },
+          error: (err) => {
+            console.error('Lỗi khi gửi tư vấn:', err);
+            alert('Gửi yêu cầu thất bại. Vui lòng thử lại sau.');
+            this.isSubmitting = false;
+          }
+        });
+    }
   }
 
   copyLink() {

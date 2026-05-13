@@ -73,7 +73,7 @@ img {
 /* ===== TYPOGRAPHY ===== */
 h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
-  color: var(--gray-100);
+  color: var(--gray-800); /* Chuyển sang màu tối để hiển thị rõ */
   line-height: 1.2;
 }
 
@@ -83,6 +83,7 @@ h1, h2, h3, h4, h5, h6 {
   margin-bottom: 40px;
   position: relative;
   padding-bottom: 15px;
+  color: #000; /* Đảm bảo tiêu đề màu đen */
 }
 
 .section-title::after {

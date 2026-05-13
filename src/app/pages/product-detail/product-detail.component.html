@@ -2,7 +2,7 @@
   <div class="container container-content">
     
     <!-- Breadcrumb Layer -->
-    <nav class="breadcrumb-nav">
+    <nav class="breadcrumb-nav" *ngIf="!isLoading">
       <a routerLink="/">Trang chủ</a>
       <span class="sep">/</span>
       <a [routerLink]="['/products']" [queryParams]="{category: product?.category_id}">{{ product?.category?.name || 'Sản phẩm' }}</a>
@@ -10,12 +10,20 @@
       <span class="current">{{ product?.name }}</span>
     </nav>
 
-    <div class="product-main-grid" *ngIf="product">
+    <!-- Skeleton Breadcrumb -->
+    <div class="breadcrumb-nav" *ngIf="isLoading">
+       <div class="skeleton-line sm skeleton-shimmer"></div>
+    </div>
+
+    <!-- MAIN PRODUCT SECTION -->
+    <div class="product-main-grid" *ngIf="!isLoading && product">
       
       <!-- LEFT: Image Gallery Advanced -->
       <div class="gallery-wrapper">
-        <div class="main-display-box" [class.zoom]="isZoomed" (click)="toggleZoom()">
-          <img [src]="mainImage" [alt]="product.name" class="img-fluid">
+        <div class="main-display-box" [class.zoom]="isZoomed" 
+             (click)="toggleZoom($event)">
+          <img [src]="mainImage" [alt]="product.name" class="img-fluid"
+               [style.transform-origin]="zoomOrigin">
           <div class="zoom-hint">🔍 Nhấn để phóng to</div>
         </div>
         <div class="thumbs-scroller">
@@ -33,6 +41,8 @@
       <div class="info-summary">
         <div class="meta-row">
            <span class="brand-tag">{{ product.brand?.name || 'CHÍNH HÃNG' }}</span>
+           <span class="badge badge-featured" *ngIf="product.is_featured || product.featured">🔥 Nổi bật</span>
+           <span class="badge badge-bestseller" *ngIf="product.is_best_seller || product.best_seller">⭐ Bán chạy</span>
            <span class="sku">ID: #{{ product.id }}</span>
         </div>
         
@@ -43,9 +53,11 @@
               <span class="label">Giá niêm yết:</span>
               <span class="val-current">{{ product.price | number }} <small>₫</small></span>
            </div>
-           <div class="stock-status">
-              <span class="status-dot"></span> Đang có hàng sẵn
-           </div>
+            <div class="stock-status" [class.out-of-stock]="product.stock <= 0">
+              <span class="status-dot"></span> 
+              {{ product.stock > 0 ? 'Đang có hàng sẵn' : 'Hết hàng tạm thời' }}
+              <span class="stock-count" *ngIf="product.stock > 0">({{ product.stock }})</span>
+            </div>
         </div>
 
         <div class="short-desc">
@@ -63,9 +75,12 @@
               <span class="main-t">NHẬN TƯ VẤN NGAY</span>
               <span class="sub-t">Chúng tôi sẽ gọi lại cho bạn sau 5 phút</span>
            </button>
-           <button class="btn-zalo-direct">
+           <a [href]="'https://zalo.me/' + (setting?.phone || '0976016975')" target="_blank" class="btn-zalo-direct">
+              <span class="z-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12,2C6.48,2,2,6.48,2,12c0,1.83,0.5,3.53,1.36,5L2,22l5.12-1.36C8.55,21.5,10.17,22,12,22c5.52,0,10-4.48,10-10 S17.52,2,12,2z M12,20c-1.66,0-3.18-0.5-4.45-1.34l-0.32-0.21l-3.05,0.81l0.82-3.04l-0.22-0.33C4.1,14.64,3.6,13.38,3.6,12 c0-4.63,3.77-8.4,8.4-8.4s8.4,3.77,8.4,8.4S16.63,20,12,20z"/></svg>
+              </span>
               TƯ VẤN QUA ZALO
-           </button>
+           </a>
         </div>
 
         <!-- Affiliate Tooling -->
@@ -110,8 +125,27 @@
 
     </div>
 
+    <!-- Skeleton Product Detail -->
+    <div class="product-main-grid" *ngIf="isLoading">
+       <!-- LEFT: Skeleton Gallery -->
+       <div class="gallery-wrapper">
+          <div class="main-display-box skeleton-shimmer"></div>
+          <div class="thumbs-scroller">
+             <div class="thumb-card skeleton-shimmer" *ngFor="let i of [1,2,3,4]"></div>
+          </div>
+       </div>
+       <!-- RIGHT: Skeleton Info -->
+       <div class="info-summary">
+          <div class="skeleton-line sm skeleton-shimmer"></div>
+          <div class="skeleton-line lg skeleton-shimmer" style="height: 40px;"></div>
+          <div class="skeleton-line md skeleton-shimmer" style="margin: 30px 0;"></div>
+          <div class="skeleton-line lg skeleton-shimmer" style="height: 100px;"></div>
+          <div class="skeleton-line lg skeleton-shimmer" style="height: 60px; margin-top: 40px;"></div>
+       </div>
+    </div>
+
     <!-- Product Middle Tabs -->
-    <div class="detail-tabs-section" *ngIf="product">
+    <div class="detail-tabs-section" *ngIf="!isLoading && product">
       <div class="tabs-nav-header">
         <button class="t-nav-item" [class.active]="activeTab === 'description'" (click)="activeTab = 'description'">
           Mô tả chi tiết
@@ -191,7 +225,10 @@
                  <div class="r-user">
                     <strong>{{ rev.name }}</strong>
                     <div class="r-email">{{ rev.email }}</div>
-                    <span class="r-date">Vừa mới đánh giá</span>
+                    <span class="r-date" *ngIf="rev.created_at">
+                      {{ rev.created_at | date:'HH:mm dd/MM/yyyy' }}
+                    </span>
+                    <span class="r-date" *ngIf="!rev.created_at">Vừa mới đánh giá</span>
                  </div>
                  <div class="r-stars">{{ '⭐'.repeat(rev.rating || 5) }}</div>
               </div>
@@ -213,21 +250,57 @@
        <h3>Đăng ký tư vấn</h3>
        <p>Để lại thông tin, chuyên viên sẽ liên hệ hỗ trợ bạn sớm nhất.</p>
     </div>
-    <form #f="ngForm" (ngSubmit)="submitConsultation()" class="m-form">
+    <form [formGroup]="consultationForm" (ngSubmit)="submitConsultation()" class="m-form">
       <div class="m-group">
-         <label>Họ tên khách hàng</label>
-         <input type="text" placeholder="Nguyễn Văn A" name="name" [(ngModel)]="consult.name" required>
+         <label>Họ tên khách hàng *</label>
+         <div class="input-with-icon">
+            <span class="icon">👤</span>
+            <input type="text" placeholder="Nguyễn Văn A" formControlName="name" 
+                   [class.is-invalid]="consultationForm.get('name')?.invalid && consultationForm.get('name')?.touched"
+                   [attr.disabled]="isSubmitting ? true : null">
+         </div>
+         <div class="error-msg" *ngIf="consultationForm.get('name')?.invalid && consultationForm.get('name')?.touched">
+            Họ tên tối thiểu 2 ký tự
+         </div>
       </div>
       <div class="m-group">
-         <label>Số điện thoại liên hệ</label>
-         <input type="text" placeholder="0xxx xxx xxx" name="phone" [(ngModel)]="consult.phone" required>
+         <label>Số điện thoại liên hệ *</label>
+         <div class="input-with-icon">
+            <span class="icon">📞</span>
+            <input type="text" placeholder="0987 xxx xxx" formControlName="phone" 
+                   [class.is-invalid]="consultationForm.get('phone')?.invalid && consultationForm.get('phone')?.touched"
+                   [attr.disabled]="isSubmitting ? true : null">
+         </div>
+         <div class="error-msg" *ngIf="consultationForm.get('phone')?.invalid && consultationForm.get('phone')?.touched">
+            Số điện thoại 10 số không hợp lệ
+         </div>
       </div>
       <div class="m-group">
-         <label>Nội dung câu hỏi</label>
-         <textarea rows="3" placeholder="Ghi chú thêm nếu bạn có yêu cầu đặc biệt..." name="message" [(ngModel)]="consult.message"></textarea>
+         <label>Email liên hệ</label>
+         <div class="input-with-icon">
+            <span class="icon">✉️</span>
+            <input type="email" placeholder="email@example.com" formControlName="email"
+                   [attr.disabled]="isSubmitting ? true : null">
+         </div>
+         <div class="error-msg" *ngIf="consultationForm.get('email')?.invalid && consultationForm.get('email')?.touched">
+            Email không đúng định dạng
+         </div>
       </div>
-      <button class="m-btn-submit" type="submit" [disabled]="f.invalid">
-        XÁC NHẬN GỬI THÔNG TIN
+      <div class="m-group">
+         <label>Nội dung câu hỏi *</label>
+         <div class="input-with-icon">
+            <span class="icon">💬</span>
+            <textarea rows="3" placeholder="Ghi chú thêm nếu bạn có yêu cầu đặc biệt..." formControlName="message" 
+                      [class.is-invalid]="consultationForm.get('message')?.invalid && consultationForm.get('message')?.touched"
+                      [attr.disabled]="isSubmitting ? true : null"></textarea>
+         </div>
+         <div class="error-msg" *ngIf="consultationForm.get('message')?.invalid && consultationForm.get('message')?.touched">
+            Vui lòng nhập nội dung (tối thiểu 2 ký tự)
+         </div>
+      </div>
+      <button class="m-btn-submit" type="submit" [disabled]="consultationForm.invalid || isSubmitting" [class.submitting]="isSubmitting">
+        <span *ngIf="!isSubmitting">XÁC NHẬN GỬI THÔNG TIN ➔</span>
+        <span *ngIf="isSubmitting" class="loader-text">ĐANG XỬ LÝ...</span>
       </button>
     </form>
   </div>

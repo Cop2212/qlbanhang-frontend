@@ -1,6 +1,7 @@
 export const environment = {
     production: false,
-    apiUrl: 'https://api.gomab.vn/api'
+    apiUrl: 'http://localhost:8000/api' // Sửa lại chạy local
+    // apiUrl: 'https://api.gomab.vn/api' // Link production
 };
 
 // export const environment = {

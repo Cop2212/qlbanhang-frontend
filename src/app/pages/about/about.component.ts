@@ -18,6 +18,7 @@ export class AboutComponent implements OnInit {
 
   setting?: Setting;
   company?: Company;
+  isLoading: boolean = true;
 
   constructor(
     private settingService: SettingService,
@@ -37,8 +38,14 @@ export class AboutComponent implements OnInit {
     });
 
     // Load company info
-    this.companyService.getCompany().subscribe(res => {
-      this.company = res;
+    this.companyService.getCompany().subscribe({
+      next: (res) => {
+        this.company = res;
+        this.isLoading = false;
+      },
+      error: () => {
+        this.isLoading = false;
+      }
     });
 
   }

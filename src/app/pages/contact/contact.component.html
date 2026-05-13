@@ -6,7 +6,13 @@
       <nav class="breadcrumb">
         <a routerLink="/">Trang chủ</a> <span>/</span> <span class="current">Liên hệ</span>
       </nav>
-      <h1 class="minimal-title">Kết nối với {{ setting?.site_name || 'chúng tôi' }}</h1>
+      <h1 class="minimal-title" *ngIf="!isLoading">Kết nối với {{ setting?.site_name || 'chúng tôi' }}</h1>
+      
+      <!-- Skeleton Title -->
+      <div class="minimal-title" *ngIf="isLoading" style="display: flex; justify-content: center;">
+         <div class="skeleton-line lg skeleton-shimmer" style="width: 400px; height: 40px; margin: 0;"></div>
+      </div>
+
       <div class="title-line"></div>
     </div>
     <!-- Decorative background elements -->
@@ -15,85 +21,136 @@
   </div>
 
   <div class="container container-content">
-    <div class="contact-grid-modern">
-      
-      <!-- Left: Contact Cards Area -->
-      <div class="contact-sidebar">
-        <div class="info-card-minimal">
-          <div class="ic-icon">📍</div>
-          <div class="ic-content">
-            <h5>Địa chỉ văn phòng</h5>
-            <p>{{ setting?.address }}</p>
+    
+    <!-- Skeleton Loading -->
+    <div *ngIf="isLoading" class="skeleton-wrapper">
+       <div class="contact-grid-modern">
+          <div class="contact-sidebar">
+             <div class="info-card-minimal skeleton-shimmer" *ngFor="let i of [1,2,3]" style="height: 100px; border: none;"></div>
           </div>
-        </div>
-
-        <div class="info-card-minimal">
-          <div class="ic-icon">📱</div>
-          <div class="ic-content">
-            <h5>Hotline hỗ trợ</h5>
-            <p>{{ setting?.phone }}</p>
-            <span class="ic-badge">Phục vụ 24/7</span>
-          </div>
-        </div>
-
-        <div class="info-card-minimal">
-          <div class="ic-icon">✉️</div>
-          <div class="ic-content">
-            <h5>Email trực tuyến</h5>
-            <p>{{ setting?.email }}</p>
-          </div>
-        </div>
-
-        <div class="partnership-box">
-           <h5>🚀 Trở thành đối tác?</h5>
-           <p>Gia tăng thu nhập cùng hệ thống Affiliate của chúng tôi.</p>
-           <a routerLink="/affiliate" class="btn-primary-small">Tham gia ngay</a>
-        </div>
-      </div>
-
-      <!-- Right: Message Form Area -->
-      <div class="contact-main">
-        <div class="form-container">
-          <div class="form-title-box">
-             <h3>Gửi yêu cầu hỗ trợ</h3>
-             <p>Vui lòng điền thông tin bên dưới, chúng tôi sẽ phản hồi sớm nhất có thể.</p>
-          </div>
-          <form [formGroup]="contactForm" (ngSubmit)="submit()">
-             <div class="form-row">
-                <div class="input-stack">
-                   <label>Họ và tên *</label>
-                   <input type="text" placeholder="Nguyễn Văn A" formControlName="name">
-                </div>
-                <div class="input-stack">
-                   <label>Số điện thoại *</label>
-                   <input type="text" placeholder="0987 xxx xxx" formControlName="phone">
-                </div>
+          <div class="contact-main">
+             <div class="form-container">
+                <div class="skeleton-line sm skeleton-shimmer"></div>
+                <div class="skeleton-line lg skeleton-shimmer" style="height: 40px; margin-bottom: 30px;"></div>
+                <div class="skeleton-line lg skeleton-shimmer" style="height: 50px;"></div>
+                <div class="skeleton-line lg skeleton-shimmer" style="height: 50px;"></div>
+                <div class="skeleton-line lg skeleton-shimmer" style="height: 150px;"></div>
+                <div class="skeleton-line lg skeleton-shimmer" style="height: 50px; margin-top: 20px;"></div>
              </div>
-             <div class="input-stack">
-                <label>Email liên hệ</label>
-                <input type="email" placeholder="email@example.com" formControlName="email">
-             </div>
-             <div class="input-stack">
-                <label>Lời nhắn của bạn</label>
-                <textarea rows="5" placeholder="Hãy cho chúng tôi biết bạn đang cần hỗ trợ gì..." formControlName="message"></textarea>
-             </div>
-             <button type="submit" class="btn-send-modern" [disabled]="contactForm.invalid">
-                TIẾP NHẬN YÊU CẦU ➔
-             </button>
-          </form>
-        </div>
-      </div>
-
+          </div>
+       </div>
+       <div class="map-wrapper-modern">
+          <div class="skeleton-shimmer" style="width: 100%; height: 400px; border-radius: 20px;"></div>
+       </div>
     </div>
 
-    <!-- Map Area (Soft framed) -->
-    <div class="map-wrapper-modern">
-      <h3 class="h2-modern text-center mb-4">Vị trí văn phòng</h3>
-      <div class="map-inner-box">
-        <iframe *ngIf="mapUrl" [src]="mapUrl" 
-                width="100%" height="400" allowfullscreen="" loading="lazy"></iframe>
-        <div *ngIf="!mapUrl" class="map-placeholder">
-           <p>Đang cập nhật vị trí bản đồ...</p>
+    <!-- MAIN CONTENT -->
+    <div *ngIf="!isLoading">
+      <div class="contact-grid-modern">
+        
+        <!-- Left: Contact Cards Area -->
+        <div class="contact-sidebar">
+          <div class="info-card-minimal">
+            <div class="ic-icon">📍</div>
+            <div class="ic-content">
+              <h5>Địa chỉ văn phòng</h5>
+              <p>{{ setting?.address }}</p>
+            </div>
+          </div>
+
+          <div class="info-card-minimal">
+            <div class="ic-icon">📱</div>
+            <div class="ic-content">
+              <h5>Hotline hỗ trợ</h5>
+              <p>{{ setting?.phone }}</p>
+              <span class="ic-badge">Phục vụ 24/7</span>
+            </div>
+          </div>
+
+          <div class="info-card-minimal">
+            <div class="ic-icon">✉️</div>
+            <div class="ic-content">
+              <h5>Email trực tuyến</h5>
+              <p>{{ setting?.email }}</p>
+            </div>
+          </div>
+
+          <div class="partnership-box">
+             <h5>🚀 Trở thành đối tác?</h5>
+             <p>Gia tăng thu nhập cùng hệ thống Affiliate của chúng tôi.</p>
+             <a routerLink="/affiliate" class="btn-primary-small">Tham gia ngay</a>
+          </div>
+        </div>
+
+        <!-- Right: Message Form Area -->
+        <div class="contact-main">
+          <div class="form-container">
+            <div class="form-title-box">
+               <h3>Gửi yêu cầu hỗ trợ</h3>
+               <p>Vui lòng điền thông tin bên dưới, chúng tôi sẽ phản hồi sớm nhất có thể.</p>
+            </div>
+              <form [formGroup]="contactForm" (ngSubmit)="submit()">
+               <div class="form-row">
+                  <div class="input-stack">
+                     <label>Họ và tên *</label>
+                     <div class="input-with-icon">
+                        <span class="icon">👤</span>
+                        <input type="text" placeholder="Nguyễn Văn A" formControlName="name" [class.is-invalid]="contactForm.get('name')?.invalid && contactForm.get('name')?.touched">
+                     </div>
+                     <div class="error-msg" *ngIf="contactForm.get('name')?.invalid && contactForm.get('name')?.touched">
+                        Vui lòng nhập họ tên (tối thiểu 2 ký tự)
+                     </div>
+                  </div>
+                  <div class="input-stack">
+                     <label>Số điện thoại *</label>
+                     <div class="input-with-icon">
+                        <span class="icon">📞</span>
+                        <input type="text" placeholder="0987 xxx xxx" formControlName="phone" [class.is-invalid]="contactForm.get('phone')?.invalid && contactForm.get('phone')?.touched">
+                     </div>
+                     <div class="error-msg" *ngIf="contactForm.get('phone')?.invalid && contactForm.get('phone')?.touched">
+                        Số điện thoại 10 số không hợp lệ
+                     </div>
+                  </div>
+               </div>
+
+               <div class="input-stack">
+                  <label>Email liên hệ</label>
+                  <div class="input-with-icon">
+                     <span class="icon">✉️</span>
+                     <input type="email" placeholder="email@example.com" formControlName="email">
+                  </div>
+                  <div class="error-msg" *ngIf="contactForm.get('email')?.invalid && contactForm.get('email')?.touched">
+                     Email không đúng định dạng
+                  </div>
+               </div>
+
+               <div class="input-stack">
+                  <label>Lời nhắn của bạn *</label>
+                  <textarea rows="5" placeholder="Hãy cho chúng tôi biết bạn đang cần hỗ trợ gì..." formControlName="message" [class.is-invalid]="contactForm.get('message')?.invalid && contactForm.get('message')?.touched"></textarea>
+                  <div class="error-msg" *ngIf="contactForm.get('message')?.invalid && contactForm.get('message')?.touched">
+                     Vui lòng nhập nội dung (tối thiểu 5 ký tự)
+                  </div>
+               </div>
+
+               <button type="submit" class="btn-send-modern" [disabled]="contactForm.invalid || isSubmitting">
+                  <span *ngIf="!isSubmitting">TIẾP NHẬN YÊU CẦU ➔</span>
+                  <span *ngIf="isSubmitting" class="loader-text">ĐANG XỬ LÝ...</span>
+               </button>
+            </form>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Map Area (Soft framed) -->
+      <div class="map-wrapper-modern">
+        <h3 class="h2-modern text-center mb-4">Vị trí văn phòng</h3>
+        <div class="map-inner-box">
+          <iframe *ngIf="mapUrl" [src]="mapUrl" 
+                  width="100%" height="400" allowfullscreen="" loading="lazy"></iframe>
+          <div *ngIf="!mapUrl" class="map-placeholder">
+             <p>Đang cập nhật vị trí bản đồ...</p>
+          </div>
         </div>
       </div>
     </div>

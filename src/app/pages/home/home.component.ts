@@ -7,11 +7,12 @@ import { ProductService } from '../../services/product.service';
 import { Slider } from '../../models/slider';
 import { Product } from '../../models/product';
 import { ConsultationService } from '../../services/consultation.service';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, ReactiveFormsModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
@@ -19,36 +20,58 @@ export class HomeComponent implements OnInit {
 
   sliders: Slider[] = [];
   featuredProducts: Product[] = [];
+  consultationForm: FormGroup;
 
   currentSlide = 0;
   slideInterval: any;
+  isLoadingSliders = true;
+  isLoadingFeatured = true;
+  isSubmitting = false;
 
   constructor(
     private sliderService: SliderService,
     private productService: ProductService,
-    private consultationService: ConsultationService
-  ) { }
+    private consultationService: ConsultationService,
+    private fb: FormBuilder
+  ) {
+    this.consultationForm = this.fb.group({
+      name: ['', [Validators.required, Validators.minLength(2)]],
+      phone: ['', [Validators.required, Validators.pattern(/^(03|05|07|08|09)\d{8}$/)]],
+      email: ['', [Validators.email]],
+      message: ['', [Validators.required, Validators.minLength(5)]]
+    });
+  }
 
   ngOnInit() {
-
     // load slider
-    this.sliderService.getSliders().subscribe(data => {
-      this.sliders = data;
+    this.isLoadingSliders = true;
+    this.sliderService.getSliders().subscribe({
+      next: (data) => {
+        this.sliders = data;
+        this.isLoadingSliders = false;
+        this.startAutoSlide();
+      },
+      error: () => {
+        this.isLoadingSliders = false;
+      }
     });
 
     // load sản phẩm nổi bật
     this.loadFeaturedProducts();
-
-    this.startAutoSlide();
   }
 
   loadFeaturedProducts() {
-
+    this.isLoadingFeatured = true;
     this.productService.getFeaturedProducts()
-      .subscribe((res: any) => {
-        this.featuredProducts = res;
+      .subscribe({
+        next: (res: any) => {
+          this.featuredProducts = res;
+          this.isLoadingFeatured = false;
+        },
+        error: () => {
+          this.isLoadingFeatured = false;
+        }
       });
-
   }
 
   startAutoSlide() {
@@ -75,24 +98,22 @@ export class HomeComponent implements OnInit {
     this.currentSlide = index;
   }
 
-  form = {
-    name: '',
-    phone: '',
-    email: '',
-    message: ''
-  };
-
   submitForm() {
-    this.consultationService.sendConsultation(this.form)
-      .subscribe({
-        next: () => {
-          alert('Gửi thành công!');
-          this.form = { name: '', phone: '', email: '', message: '' };
-        },
-        error: (err) => {
-          console.error(err);
-          alert('Gửi thất bại!');
-        }
-      });
+    if (this.consultationForm.valid && !this.isSubmitting) {
+      this.isSubmitting = true;
+      this.consultationService.sendConsultation(this.consultationForm.value)
+        .subscribe({
+          next: () => {
+            alert('Cảm ơn bạn! Yêu cầu của bạn đã được gửi thành công. Chúng tôi sẽ liên hệ lại sớm nhất.');
+            this.consultationForm.reset();
+            this.isSubmitting = false;
+          },
+          error: (err) => {
+            console.error(err);
+            alert('Gửi yêu cầu thất bại. Vui lòng thử lại sau.');
+            this.isSubmitting = false;
+          }
+        });
+    }
   }
 }

@@ -18,20 +18,26 @@ export class HeaderComponent implements OnInit {
 
   phoneLink: string = '';
   isMenuOpen: boolean = false;
+  isLoading: boolean = true;
 
   constructor(private settingService: SettingService) { }
 
   ngOnInit(): void {
 
-    this.settingService.getSetting().subscribe(res => {
-      this.setting = res;
+    this.settingService.getSetting().subscribe({
+      next: (res) => {
+        this.setting = res;
+        const phone = res.phone;
 
-      const phone = res.phone;
-
-      if (this.isMobile()) {
-        this.phoneLink = 'tel:' + phone;
-      } else {
-        this.phoneLink = 'https://zalo.me/' + phone;
+        if (this.isMobile()) {
+          this.phoneLink = 'tel:' + phone;
+        } else {
+          this.phoneLink = 'https://zalo.me/' + phone;
+        }
+        this.isLoading = false;
+      },
+      error: () => {
+        this.isLoading = false;
       }
     });
 

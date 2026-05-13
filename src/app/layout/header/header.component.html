@@ -8,13 +8,15 @@
         </button>
 
         <!-- Logo -->
-        <div class="logo">
-            <a routerLink="/">
+        <div class="logo" [class.animate-in]="!isLoading">
+            <a routerLink="/" *ngIf="!isLoading">
                 <img *ngIf="setting?.logo" [src]="setting?.logo" alt="logo" style="width: auto; height: 45px;">
                 <span class="brand" *ngIf="!setting?.logo">
                     {{ setting?.site_name }}
                 </span>
             </a>
+            <!-- Skeleton Logo -->
+            <div class="skeleton-logo skeleton-shimmer" *ngIf="isLoading"></div>
         </div>
 
         <!-- Desktop Menu -->
@@ -43,13 +45,18 @@
             </div>
 
             <!-- Hotline -->
-            <div class="hotline">
+            <div class="hotline" [class.animate-in]="!isLoading">
                 <span class="hotline-icon">📞</span>
-                <div class="hotline-info">
+                <div class="hotline-info" *ngIf="!isLoading">
                     <span class="label">Hotline</span>
                     <a class="phone" [href]="phoneLink" target="_blank">
                         {{ setting?.phone }}
                     </a>
+                </div>
+                <!-- Skeleton Hotline -->
+                <div class="hotline-info" *ngIf="isLoading">
+                    <div class="skeleton-line sm skeleton-shimmer"></div>
+                    <div class="skeleton-line md skeleton-shimmer"></div>
                 </div>
             </div>
         </div>

@@ -35,6 +35,8 @@ export class ProductsComponent implements OnInit {
   isMobileFiltersOpen: boolean = false;
   sitePhone: string = '';
   setting: any;
+  isLoadingProducts: boolean = true;
+  isLoadingBestSellers: boolean = true;
 
   constructor(
     private productService: ProductService,
@@ -58,20 +60,34 @@ export class ProductsComponent implements OnInit {
 
   loadProducts(page: number = 1) {
     this.currentPage = page;
+    this.isLoadingProducts = true;
     this.productService
       .getProducts(page, this.selectedCategoryId, this.sort, this.perPage, this.searchQuery)
-      .subscribe(res => {
-        this.products = res.data;
-        this.totalProducts = res.total;
-        this.currentPage = res.current_page;
-        this.lastPage = res.last_page;
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+      .subscribe({
+        next: (res) => {
+          this.products = res.data;
+          this.totalProducts = res.total;
+          this.currentPage = res.current_page;
+          this.lastPage = res.last_page;
+          this.isLoadingProducts = false;
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        },
+        error: () => {
+          this.isLoadingProducts = false;
+        }
       });
   }
 
   loadBestSellers() {
-    this.productService.getBestSeller().subscribe((res: any) => {
-      this.bestSellers = res;
+    this.isLoadingBestSellers = true;
+    this.productService.getBestSeller().subscribe({
+      next: (res: any) => {
+        this.bestSellers = res;
+        this.isLoadingBestSellers = false;
+      },
+      error: () => {
+        this.isLoadingBestSellers = false;
+      }
     });
   }
 

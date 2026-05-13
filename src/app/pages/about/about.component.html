@@ -16,57 +16,130 @@
 
   <div class="container container-content">
     
-    <!-- Intro Section -->
-    <div class="intro-grid">
-      <div class="intro-text">
-         <div class="badge-modern">Câu chuyện thương hiệu</div>
-         <h2 class="h2-modern">{{ company?.title }}</h2>
-         <div class="content-body" [innerHTML]="company?.content"></div>
-      </div>
-      <div class="intro-image-container">
-         <div class="image-stack">
-            <img *ngIf="setting?.logo" [src]="setting?.logo" alt="Logo" class="img-main">
-            <div class="image-accent-box">
-               <span class="year">{{ company?.established_year }}</span>
-               <span class="text">Thành lập</span>
-            </div>
+    <!-- Skeleton Section -->
+    <div *ngIf="isLoading" class="skeleton-wrapper">
+       <!-- Intro Skeleton -->
+       <div class="intro-grid">
+         <div class="intro-text">
+            <div class="skeleton-line sm skeleton-shimmer"></div>
+            <div class="skeleton-line lg skeleton-shimmer" style="height: 40px;"></div>
+            <div class="skeleton-line md skeleton-shimmer"></div>
+            <div class="skeleton-line md skeleton-shimmer"></div>
+            <div class="skeleton-line md skeleton-shimmer"></div>
          </div>
-      </div>
+         <div class="intro-image-container">
+            <div class="skeleton-shimmer" style="width: 100%; height: 300px; border-radius: 20px;"></div>
+         </div>
+       </div>
+
+       <!-- Values Skeleton -->
+       <div class="values-wrapper">
+         <div class="text-center mb-5">
+            <div class="skeleton-line sm skeleton-shimmer" style="margin: 0 auto 10px;"></div>
+            <div class="skeleton-line lg skeleton-shimmer" style="width: 300px; height: 30px; margin: 0 auto;"></div>
+         </div>
+         <div class="values-flex">
+           <div class="value-card skeleton-shimmer" *ngFor="let i of [1,2,3]" style="height: 200px; border: none;"></div>
+         </div>
+       </div>
+
+       <!-- Legal Skeleton -->
+       <div class="legal-info-section">
+         <div class="text-center mb-5">
+            <div class="skeleton-line sm skeleton-shimmer" style="margin: 0 auto 10px;"></div>
+            <div class="skeleton-line lg skeleton-shimmer" style="width: 300px; height: 30px; margin: 0 auto;"></div>
+         </div>
+         <div class="legal-info-grid">
+           <div class="legal-card skeleton-shimmer" *ngFor="let i of [1,2,3,4]" style="height: 100px; border: none;"></div>
+         </div>
+       </div>
     </div>
 
-    <!-- Values Section (Refined) -->
-    <div class="values-wrapper">
-      <div class="text-center mb-5">
-         <h5 class="subtitle">GIÁ TRỊ CỦA CHÚNG TÔI</h5>
-         <h2 class="h2-modern">Kim chỉ nam hành động</h2>
-      </div>
-      <div class="values-flex">
-        <div class="value-card">
-          <div class="v-icon-box">🤝</div>
-          <h4>Uy tín</h4>
-          <p>Luôn giữ đúng lời hứa với khách hàng trong mọi giao dịch.</p>
+    <!-- MAIN CONTENT -->
+    <div *ngIf="!isLoading">
+      <!-- Intro Section -->
+      <div class="intro-grid">
+        <div class="intro-text">
+           <div class="badge-modern">Câu chuyện thương hiệu</div>
+           <h2 class="h2-modern">{{ company?.title }}</h2>
+           <div class="content-body" [innerHTML]="company?.content"></div>
         </div>
-        <div class="value-card">
-          <div class="v-icon-box">🚀</div>
-          <h4>Đổi mới</h4>
-          <p>Cập nhật xu hướng và công nghệ mới mỗi ngày.</p>
-        </div>
-        <div class="value-card">
-          <div class="v-icon-box">💖</div>
-          <h4>Tận tâm</h4>
-          <p>Chăm sóc từng nhu cầu nhỏ nhất của bạn.</p>
+        <div class="intro-image-container">
+           <div class="image-stack">
+              <img *ngIf="setting?.logo" [src]="setting?.logo" alt="Logo" class="img-main">
+              <div class="image-accent-box">
+                 <span class="year">{{ company?.established_year }}</span>
+                 <span class="text">Thành lập</span>
+              </div>
+           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Legal Area (Compact) -->
-    <div class="legal-box-compact">
-      <h2 class="h2-modern text-center mb-4">Chứng nhận doanh nghiệp</h2>
-      <div class="legal-grid">
-        <div class="legal-item"><strong>CÔNG TY:</strong> {{ company?.name }}</div>
-        <div class="legal-item"><strong>MST:</strong> {{ company?.tax_code }}</div>
-        <div class="legal-item"><strong>NGƯỜI ĐẠI DIỆN:</strong> {{ company?.representative }}</div>
-        <div class="legal-item"><strong>NĂM:</strong> {{ company?.established_year }}</div>
+      <!-- Values Section (Refined) -->
+      <div class="values-wrapper">
+        <div class="text-center mb-5">
+           <h5 class="subtitle">GIÁ TRỊ CỦA CHÚNG TÔI</h5>
+           <h2 class="h2-modern">Kim chỉ nam hành động</h2>
+        </div>
+        <div class="values-flex">
+          <div class="value-card">
+            <div class="v-icon-box">🤝</div>
+            <h4>Uy tín</h4>
+            <p>Luôn giữ đúng lời hứa với khách hàng trong mọi giao dịch.</p>
+          </div>
+          <div class="value-card">
+            <div class="v-icon-box">🚀</div>
+            <h4>Đổi mới</h4>
+            <p>Cập nhật xu hướng và công nghệ mới mỗi ngày.</p>
+          </div>
+          <div class="value-card">
+            <div class="v-icon-box">💖</div>
+            <h4>Tận tâm</h4>
+            <p>Chăm sóc từng nhu cầu nhỏ nhất của bạn.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Legal Info Section (Minimalist) -->
+      <div class="legal-info-section">
+        <div class="text-center mb-5">
+           <h5 class="subtitle">THÔNG TIN PHÁP LÝ</h5>
+           <h2 class="h2-modern">Chứng nhận doanh nghiệp</h2>
+        </div>
+
+        <div class="legal-info-grid">
+          <div class="legal-card">
+            <div class="l-icon-box">🏢</div>
+            <div class="l-content">
+              <span class="l-label">Tên doanh nghiệp</span>
+              <span class="l-value">{{ company?.name }}</span>
+            </div>
+          </div>
+          
+          <div class="legal-card">
+            <div class="l-icon-box">📑</div>
+            <div class="l-content">
+              <span class="l-label">Mã số thuế</span>
+              <span class="l-value">{{ company?.tax_code }}</span>
+            </div>
+          </div>
+
+          <div class="legal-card">
+            <div class="l-icon-box">👤</div>
+            <div class="l-content">
+              <span class="l-label">Người đại diện</span>
+              <span class="l-value">{{ company?.representative }}</span>
+            </div>
+          </div>
+
+          <div class="legal-card">
+            <div class="l-icon-box">🗓️</div>
+            <div class="l-content">
+              <span class="l-label">Năm thành lập</span>
+              <span class="l-value">{{ company?.established_year }}</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 

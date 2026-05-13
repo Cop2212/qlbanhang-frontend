@@ -16,7 +16,7 @@ import { Setting } from './models/setting';
   styleUrl: './app.scss'
 })
 export class App implements OnInit {
-  protected readonly title = signal('shop-frontend');
+  protected readonly title = signal('Gomab - SmartLock');
 
   showScroll = false;
   setting?: Setting;
