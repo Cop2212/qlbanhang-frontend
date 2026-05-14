@@ -10,7 +10,7 @@
         <!-- Logo -->
         <div class="logo" [class.animate-in]="!isLoading">
             <a routerLink="/" *ngIf="!isLoading">
-                <img *ngIf="setting?.logo" [src]="setting?.logo" alt="logo" style="width: auto; height: 45px;">
+                <img *ngIf="setting?.logo" [src]="setting?.logo" alt="logo" class="header-logo">
                 <span class="brand" *ngIf="!setting?.logo">
                     {{ setting?.site_name }}
                 </span>

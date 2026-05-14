@@ -1,10 +1,4 @@
 export const environment = {
-    production: false,
-    apiUrl: 'http://localhost:8000/api' // Sửa lại chạy local
-    // apiUrl: 'https://api.gomab.vn/api' // Link production
+    production: true,
+    apiUrl: 'https://api.gomab.vn/api'
 };
-
-// export const environment = {
-//     production: true,
-//     apiUrl: 'https://qlbanhang-backend.onrender.com/api'
-// };

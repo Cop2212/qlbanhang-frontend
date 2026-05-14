@@ -51,8 +51,10 @@
 }
 
 .logo img {
-    height: 50px;
+    height: 45px;
     width: auto;
+    max-width: 100%;
+    object-fit: contain;
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
@@ -318,14 +320,29 @@
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
+        z-index: 10;
+        
+        img {
+            height: 32px; /* Thu nhỏ thêm một chút để an toàn */
+        }
+    }
+
+    .header-right {
+        max-width: 40%; /* Giới hạn để không đè lên logo ở giữa */
+        justify-content: flex-end;
     }
 
     .phone {
-        font-size: 14px;
+        font-size: 13px; /* Cỡ chữ nhỏ hơn trên mobile */
     }
     
     .hotline {
-        padding: 6px 10px;
+        padding: 4px 8px;
+        gap: 6px;
+    }
+
+    .hotline-icon {
+        font-size: 16px;
     }
 
     .label {
