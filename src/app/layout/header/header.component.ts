@@ -57,8 +57,15 @@ export class HeaderComponent implements OnInit {
   }
 
   openChat(): void {
-    if ((window as any).Tawk_API) {
-      (window as any).Tawk_API.maximize();
+    if (this.setting?.facebook) {
+      // Trích xuất ID hoặc slug từ link facebook (ví dụ: https://facebook.com/myPage -> myPage)
+      const fbLink = this.setting.facebook.replace(/\/$/, ""); // Xóa dấu gạch chéo cuối nếu có
+      const parts = fbLink.split("/");
+      const pageId = parts[parts.length - 1];
+      window.open(`https://m.me/${pageId}`, '_blank');
+    } else {
+      // Fallback nếu chưa cấu hình facebook link
+      window.open('https://m.me', '_blank');
     }
   }
 
