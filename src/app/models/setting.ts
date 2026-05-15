@@ -1,11 +1,13 @@
 export interface Setting {
-    site_name: string
-    logo: string
-    phone: string
-    email: string
-    address: string
-    facebook: string
-    youtube: string
-    zalo: string
-    footer_text: string
+    site_name: string;
+    logo: string;
+    phone: string;
+    email: string;
+    address: string;
+    facebook: string;
+    youtube: string;
+    zalo: string;
+    footer_text: string;
+    zalo_oa_id?: string;
+    messenger_url?: string;
 }

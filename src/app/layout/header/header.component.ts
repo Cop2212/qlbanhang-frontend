@@ -27,12 +27,13 @@ export class HeaderComponent implements OnInit {
     this.settingService.getSetting().subscribe({
       next: (res) => {
         this.setting = res;
-        const phone = res.phone;
+        // Xóa tất cả khoảng trắng trong số điện thoại để tạo link chuẩn
+        const cleanPhone = res.phone.replace(/\s+/g, '');
 
         if (this.isMobile()) {
-          this.phoneLink = 'tel:' + phone;
+          this.phoneLink = 'tel:' + cleanPhone;
         } else {
-          this.phoneLink = 'https://zalo.me/' + phone;
+          this.phoneLink = 'https://zalo.me/' + cleanPhone;
         }
         this.isLoading = false;
       },
@@ -57,14 +58,19 @@ export class HeaderComponent implements OnInit {
   }
 
   openChat(): void {
-    if (this.setting?.facebook) {
-      // Trích xuất ID hoặc slug từ link facebook (ví dụ: https://facebook.com/myPage -> myPage)
-      const fbLink = this.setting.facebook.replace(/\/$/, ""); // Xóa dấu gạch chéo cuối nếu có
+    if (this.setting?.messenger_url) {
+      let url = this.setting.messenger_url;
+      if (!url.startsWith('http')) {
+        url = 'https://' + url;
+      }
+      window.open(url, '_blank');
+    } else if (this.setting?.facebook) {
+      // Fallback: Trích xuất ID hoặc slug từ link facebook cũ
+      const fbLink = this.setting.facebook.replace(/\/$/, "");
       const parts = fbLink.split("/");
       const pageId = parts[parts.length - 1];
       window.open(`https://m.me/${pageId}`, '_blank');
     } else {
-      // Fallback nếu chưa cấu hình facebook link
       window.open('https://m.me', '_blank');
     }
   }
